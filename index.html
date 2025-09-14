@@ -3,65 +3,524 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis P3K & Pramuka Interaktif</title>
-<link rel="stylesheet" href="soal.css">
+    <title>Kuis P3K & Pramuka Interaktif - Berbasis Boyman 2016</title>
+    <style>
+        /* === GLOBAL STYLES === */
+        :root {
+            --primary: #667eea;
+            --success: #2ed573;
+            --info: #577bfa;
+            --warning: #ffa502;
+            --danger: #ff6b6b;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: fadeInDown 0.8s ease-out;
+        }
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .header p {
+            color: #555;
+            font-size: 1.1rem;
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            box-shadow: var(--shadow);
+        }
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        }
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: #666;
+        }
+        .timer {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        /* === QUIZ STYLES === */
+        .quiz-container {
+            min-height: 400px;
+        }
+        .question-card {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #fafafa;
+            border-left: 5px solid var(--primary);
+            box-shadow: var(--shadow);
+        }
+        .question-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .options {
+            margin-bottom: 25px;
+        }
+        .option {
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .option:hover {
+            background: #f0f7ff;
+            border-color: var(--primary);
+        }
+        .option.selected {
+            background: #e3f2fd;
+            border-color: var(--info);
+        }
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--success);
+            color: #155724;
+        }
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: var(--danger);
+            color: #721c24;
+        }
+        .explanation {
+            background: #fffde7;
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 4px solid var(--warning);
+            display: none;
+            margin-top: 15px;
+            font-size: 1rem;
+            animation: slideIn 0.5s ease-out;
+        }
+        .explanation.show {
+            display: block;
+        }
+        .score-display {
+            text-align: center;
+            padding: 40px;
+            margin: 30px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+        .score-display h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .score-display p {
+            font-size: 1.3rem;
+            margin: 10px 0;
+        }
+        /* === REFERENCE TABLE === */
+        .reference-table {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+        tr:hover {
+            background: #f5f9ff;
+        }
+        .category-p3k { color: var(--success); }
+        .category-pramuka { color: var(--info); }
+        .category-boyman-xxiv { color: #e74c3c; }
+        .category-boyman-xxix { color: #9b59b6; }
+        .category-boyman-iii { color: #f39c12; }
+        .category-boyman-iv { color: #1abc9c; }
+        .category-boyman-vii { color: #3498db; }
+        /* === MATERIALS === */
+        .material-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-left: 5px solid var(--primary);
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        .material-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #eee;
+        }
+        .material-section ul, .material-section ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        .material-section li {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+        /* === MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.5s ease-out;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 15px 20px;
+            transition: var(--transition);
+        }
+        .close:hover {
+            color: #000;
+        }
+        /* === LOADING === */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            font-style: italic;
+        }
+        /* === ANIMATIONS === */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header p { font-size: 1rem; }
+            .btn-group { flex-direction: column; }
+            .nav-tabs { flex-direction: column; }
+            .nav-tab { width: 100%; justify-content: center; }
+            .controls { padding: 15px; }
+            .score-display h2 { font-size: 2rem; }
+            .score-display p { font-size: 1.1rem; }
+        }
+        /* === HISTORY STYLES === */
+        .history-container {
+            margin-top: 20px;
+        }
+        .history-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .history-title {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        .history-date {
+            color: #666;
+            font-size: 0.9rem;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .history-score {
+            font-weight: bold;
+            color: #2ed573;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        .history-category {
+            color: #667eea;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 0.85rem;
+        }
+        .empty-history {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-style: italic;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+        }
+        .clear-history-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .clear-history-btn:hover {
+            background: #e74c3c;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏥⚡ Kuis P3K & Pramuka</h1>
-            <p>Platform Pembelajaran Interaktif - Pertolongan Pertama & Kepramukaan</p>
+            <h1>🏥⚡ Kuis P3K & Pramuka Berbasis BOYMAN 2016</h1>
+            <p>Platform Pembelajaran Interaktif - Sumber Resmi BAB III, IV, VII, XXIV, XXIX</p>
         </div>
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('quiz')">🎯 Kuis Interaktif</button>
             <button class="nav-tab" onclick="showTab('reference')">📚 Bank Soal</button>
             <button class="nav-tab" onclick="showTab('p3k')">🏥 Materi P3K</button>
             <button class="nav-tab" onclick="showTab('pramuka')">⚡ Materi Pramuka</button>
+            <button class="nav-tab" onclick="showTab('boyman')">📘 Referensi Boyman 2016</button>
+            <button class="nav-tab" onclick="showTab('history')">📋 Riwayat Kuis</button>
         </div>
         <div class="content-area">
             <!-- Quiz Tab -->
             <div id="quiz" class="tab-content active">
                 <div class="controls">
                     <div class="search-box">
-                        <input type="text" id="quizSearch" placeholder="Cari topik atau kategori...">
+                        <input type="text" id="quizSearch" placeholder="Cari soal, jawaban, atau kategori...">
                     </div>
                     <div class="btn-group">
                         <button class="btn btn-primary" onclick="startQuiz('all')">🎲 Kuis Campur</button>
                         <button class="btn btn-success" onclick="startQuiz('p3k')">🏥 Kuis P3K</button>
                         <button class="btn btn-info" onclick="startQuiz('pramuka')">⚡ Kuis Pramuka</button>
+                        <button class="btn btn-danger" onclick="startQuiz('boyman-xxiv')">🔴 BAB XXIV: PPPK & Kesehatan</button>
+                        <button class="btn btn-purple" onclick="startQuiz('boyman-xxix')">🟣 BAB XXIX: Pengetahuan Umum</button>
+                        <button class="btn btn-orange" onclick="startQuiz('boyman-iii')">🟠 BAB III: Biografi BP</button>
+                        <button class="btn btn-teal" onclick="startQuiz('boyman-iv')">🟢 BAB IV: Sejarah Kepanduan</button>
+                        <button class="btn btn-blue" onclick="startQuiz('boyman-vii')">🔵 BAB VII: Pengetahuan Kepramukaan</button>
                         <button class="btn btn-warning" onclick="resetQuiz()">🔄 Reset</button>
                     </div>
                     <div class="stats">
                         <span class="timer" id="timer">⏱️ 00:00</span>
                         <span id="quizProgress">Soal: 0/0</span>
+                        <span id="quizCategory">Kategori: Semua</span>
                     </div>
                 </div>
                 <div id="scoreDisplay" class="score-display" style="display: none;">
                     <div id="scoreText"></div>
                 </div>
                 <div id="quizContainer" class="quiz-container">
-                    <div class="question-card">
-                        <h2 style="text-align: center; color: #667eea;">Selamat Datang di Kuis P3K & Pramuka!</h2>
-                        <p style="text-align: center; margin: 20px 0; color: #666;">Pilih kategori kuis yang ingin Anda ikuti untuk memulai pembelajaran interaktif.</p>
-                        <div style="text-align: center;">
-                            <button class="btn btn-primary" onclick="startQuiz('all')" style="margin: 10px;">Mulai Kuis Campur</button>
-                            <button class="btn btn-success" onclick="startQuiz('p3k')" style="margin: 10px;">Mulai Kuis P3K</button>
-                            <button class="btn btn-info" onclick="startQuiz('pramuka')" style="margin: 10px;">Mulai Kuis Pramuka</button>
-                        </div>
-                    </div>
+                    <div class="loading">⏳ Memuat data soal...</div>
                 </div>
             </div>
             <!-- Reference Tab -->
             <div id="reference" class="tab-content">
                 <div class="controls">
                     <div class="search-box">
-                        <input type="text" id="refSearch" placeholder="Cari soal, jawaban, atau topik...">
+                        <input type="text" id="refSearch" placeholder="Cari soal, jawaban, kategori, atau bab...">
                     </div>
                     <div class="btn-group">
                         <button class="btn btn-primary" onclick="showAllReference()">📋 Tampilkan Semua</button>
-                        <button class="btn btn-success" onclick="filterReference('p3k')">🏥 Filter P3K</button>
-                        <button class="btn btn-info" onclick="filterReference('pramuka')">⚡ Filter Pramuka</button>
-                        <button class="btn btn-warning" onclick="exportReference()">📄 Export</button>
+                        <button class="btn btn-success" onclick="filterByCategory('p3k')">🏥 P3K</button>
+                        <button class="btn btn-info" onclick="filterByCategory('pramuka')">⚡ Pramuka</button>
+                        <button class="btn btn-danger" onclick="filterByCategory('boyman-xxiv')">🔴 BAB XXIV</button>
+                        <button class="btn btn-purple" onclick="filterByCategory('boyman-xxix')">🟣 BAB XXIX</button>
+                        <button class="btn btn-orange" onclick="filterByCategory('boyman-iii')">🟠 BAB III</button>
+                        <button class="btn btn-teal" onclick="filterByCategory('boyman-iv')">🟢 BAB IV</button>
+                        <button class="btn btn-blue" onclick="filterByCategory('boyman-vii')">🔵 BAB VII</button>
+                        <button class="btn btn-warning" onclick="exportReference()">📄 Export (JSON)</button>
+                        <button class="btn btn-info" onclick="exportToPDF()">🖨️ Export (PDF)</button>
                     </div>
                     <div class="stats">
                         <span id="refStats">Total: 0 soal</span>
@@ -73,13 +532,14 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Kategori</th>
+                                <th>Bab</th>
                                 <th>Pertanyaan</th>
                                 <th>Jawaban Benar</th>
                                 <th>Penjelasan</th>
                             </tr>
                         </thead>
                         <tbody id="referenceTableBody">
-                            <!-- Data akan diisi oleh JavaScript -->
+                            <tr><td colspan="6" class="loading">⏳ Memuat data referensi...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -88,1155 +548,158 @@
             <div id="p3k" class="tab-content">
                 <div class="quiz-container">
                     <h2 style="color: #667eea; margin-bottom: 20px;">📚 Materi Pertolongan Pertama pada Kecelakaan (P3K)</h2>
-                    <div class="question-card">
-                        <h3>🎯 Prinsip Dasar P3K</h3>
-                        <p><strong>1. DRABC Protocol:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>D</strong>anger - Pastikan keamanan lokasi</li>
-                            <li><strong>R</strong>esponse - Cek kesadaran korban</li>
-                            <li><strong>A</strong>irway - Buka jalan napas</li>
-                            <li><strong>B</strong>reathing - Cek pernapasan</li>
-                            <li><strong>C</strong>irculation - Cek sirkulasi darah</li>
-                        </ul>
-                        <p><strong>2. Prinsip Utama P3K:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Menyelamatkan nyawa (Life Saving)</li>
-                            <li>Mencegah kondisi memburuk (Prevent Worsening)</li>
-                            <li>Mempercepat pemulihan (Promote Recovery)</li>
-                            <li>Menghindari risiko tambahan (Avoid Further Harm)</li>
-                        </ul>
-                        <p><strong>3. Protokol Bantuan Hidup Dasar (BHD) / CPR Terbaru (2020-2025):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Untuk dewasa: Rasio kompresi : ventilasi = 30:2</li>
-                            <li>Kecepatan kompresi: 100-120 kali/menit</li>
-                            <li>Kedalaman kompresi: 5-6 cm</li>
-                            <li>Minimal hentikan kompresi selama <5 detik</li>
-                            <li>Pada kasus asfiksia (misalnya tenggelam), lakukan 5 siklus CPR terlebih dahulu sebelum meminta bantuan jika sendiri</li>
-                            <li>Gunakan AED secepat mungkin jika tersedia</li>
-                        </ul>
-                    </div>
-                    <div class="question-card">
-                        <h3>🚑 Teknik CPR (Cardiopulmonary Resuscitation)</h3>
-                        <p><strong>Langkah-langkah CPR Dewasa (Tanpa Alat):</strong></p>
-                        <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Periksa keamanan lingkungan</li>
-                            <li>Tanyakan kesadaran korban dengan mengguncang pundak dan berteriak "Halo! Apakah Anda baik-baik saja?"</li>
-                            <li>Jika tidak ada respons, segera minta bantuan (atau panggil 119/118 sendiri jika sendirian)</li>
-                            <li>Buka jalan napas dengan teknik head tilt-chin lift (kecuali dicurigai cedera tulang belakang leher)</li>
-                            <li>Cek napas selama 5-10 detik (lihat, dengar, rasakan)</li>
-                            <li>Jika tidak bernapas atau hanya mengeluarkan napas gasping, mulailah CPR</li>
-                            <li>Lakukan 30 kompresi dada: letakkan telapak tangan di pusat sternum, tumpangkan tangan kedua di atas, lengan lurus, kompresi dalam 5-6 cm</li>
-                            <li>Berikan 2 napas buatan: tutup hidung korban, taruh mulut Anda rapat di mulut korban, tiup selama 1 detik hingga dada naik</li>
-                            <li>Ulangi siklus 30:2 sampai korban sadar, mulai bernapas normal, atau petugas medis tiba</li>
-                            <li>Jika tidak bisa memberi napas buatan, lakukan CPR kompresi saja (Hands-Only CPR)</li>
-                        </ol>
-                        <p><strong>CPR Anak (1 tahun - pubertas):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Kedalaman kompresi: sekitar 5 cm (sepertiga diameter dada)</li>
-                            <li>Gunakan satu atau dua tangan sesuai ukuran anak</li>
-                            <li>Rasio 30:2 (satu penolong) atau 15:2 (dua penolong)</li>
-                            <li>Napas buatan lebih ringan</li>
-                        </ul>
-                        <p><strong>CPR Bayi (<1 tahun):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Kedalaman kompresi: sekitar 4 cm (sepertiga diameter dada)</li>
-                            <li>Gunakan dua jari (jari telunjuk dan tengah) untuk kompresi</li>
-                            <li>Rasio 30:2 (satu penolong) atau 15:2 (dua penolong)</li>
-                            <li>Napas buatan: tutup hidung dan mulut bayi sekaligus</li>
-                        </ul>
-                    </div>
-                    <div class="question-card">
-                        <h3>🩹 Penanganan Luka dan Cedera</h3>
-                        <p><strong>Jenis-jenis luka dan penanganannya:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Luka Sayat (Incision):</strong> Bersihkan dengan air mengalir dan sabun, tekan dengan kasa steril hingga berhenti, tutup dengan perban steril. Jangan gunakan kapas karena seratnya menempel.</li>
-                            <li><strong>Luka Robek (Laceration):</strong> Sama seperti luka sayat, tetapi lebih tidak teratur. Perhatikan kemungkinan adanya benda asing. Jika besar, butuh jahitan medis.</li>
-                            <li><strong>Luka Tusuk (Puncture):</strong> JANGAN mencabut benda yang menancap. Stabilkan benda tersebut dengan perban atau kain, jangan gerakkan. Segera rujuk ke rumah sakit.</li>
-                            <li><strong>Luka Bakar:</strong>
-                                <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li><strong>Derajat 1 (Merah, nyeri):</strong> Siram air dingin 10-15 menit, oleskan salep antibiotik ringan, tutup dengan kasa non-stick.</li>
-                                    <li><strong>Derajat 2 (Bula, basah, nyeri hebat):</strong> Siram air dingin mengalir 15-20 menit. Jangan pecahkan bula. Tutup dengan kasa steril basah. Jangan gunakan es, mentega, pasta gigi, atau minyak.</li>
-                                    <li><strong>Derajat 3 (Hitam/kering, tidak nyeri karena saraf rusak):</strong> Jangan siram dengan air. Tutup dengan kain bersih dan steril. Segera rujuk ke RS. Ini adalah kegawatdaruratan medis.</li>
-                                </ul>
-                            </li>
-                            <li><strong>Perdarahan Hebat:</strong> Gunakan tekanan langsung dengan kasa steril. Angkat anggota tubuh lebih tinggi dari jantung jika memungkinkan. Jika tidak berhenti, gunakan tekanan pada titik tekan arteri (misalnya brakialis untuk lengan, femoral untuk paha). Sebagai upaya terakhir, gunakan tourniquet hanya jika nyawa terancam dan tidak ada cara lain.</li>
-                            <li><strong>Luka Tembak:</strong> Jangan mencoba mengeluarkan peluru. Tekan perdarahan. Jaga suhu tubuh. Segera rujuk ke RS.</li>
-                        </ul>
-                        <p><strong>Fraktur (Patah Tulang):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Tanda: Nyeri hebat, bengkak, deformitas, tidak bisa digerakkan, crepitus (suara berderik).</li>
-                            <li>Penanganan: Jangan menggerakkan bagian yang patah. Imobilisasi dengan splint (bisa dari kayu, karton, atau koran digulung) dan balut dengan perban. Beri es untuk mengurangi bengkak. Rujuk ke RS.</li>
-                        </ul>
-                        <p><strong>Syok:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Syok Hipovolemik:</strong> Akibat kehilangan darah/cairan. Tanda: kulit pucat, dingin, berkeringat, nadi cepat lemah, tekanan darah turun, kesadaran menurun. Penanganan: tidurkan korban, angkat kaki 30 cm, jaga suhu tubuh, segera rujuk.</li>
-                            <li><strong>Syok Anafilaktik:</strong> Reaksi alergi berat. Tanda: gatal-gatal, bengkak wajah/tenggorokan, sesak, tekanan darah turun drastis, kebingungan. Penanganan: Berikan epinefrin (Jika tersedia dan korban punya auto-injector), posisikan korban terlentang, siapkan CPR jika henti napas, segera rujuk.</li>
-                            <li><strong>Syok Neurogenik:</strong> Akibat cedera tulang belakang. Tanda: kulit hangat dan kering, tekanan darah rendah, denyut nadi lambat. Penanganan: imobilisasi kepala-leher, jaga suhu tubuh, segera rujuk.</li>
-                        </ul>
-                    </div>
-                    <div class="question-card">
-                        <h3>🧠 Kondisi Medis Darurat</h3>
-                        <p><strong>Stroke (FAST):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>F (Face):</strong> Wajah mencong saat tersenyum</li>
-                            <li><strong>A (Arm):</strong> Satu lengan lemah atau tidak bisa diangkat</li>
-                            <li><strong>S (Speech):</strong> Bicara pelo, tidak jelas, atau tidak bisa bicara</li>
-                            <li><strong>T (Time):</strong> Waktu sangat penting! Segera hubungi 119/118</li>
-                        </ul>
-                        <p><strong>Serangan Jantung (Heart Attack):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Tanda: Nyeri dada seperti diremas/ditekan, menjalar ke lengan kiri, rahang, punggung. Sesak napas, keringat dingin, mual, pusing, kelemahan ekstrem.</li>
-                            <li>Penanganan: Minta korban berhenti aktivitas, duduk tenang. Berikan aspirin 160-325 mg (jika tidak alergi dan tidak ada kontraindikasi). Segera hubungi layanan darurat. Siapkan AED dan CPR jika korban kehilangan kesadaran.</li>
-                        </ul>
-                        <p><strong>Tersedak (Choking):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Ringan:</strong> Korban masih bisa bicara, batuk, bernapas. Dorong korban untuk batuk kuat.</li>
-                            <li><strong>Berat:</strong> Korban tidak bisa bicara, batuk, atau bernapas, menunjuk ke tenggorokan. Lakukan Heimlich Maneuver:
-                                <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li>Berdiri di belakang korban, lingkarkan tangan di sekitar pinggang</li>
-                                    <li>Kejepit satu tinju di antara pusar dan tulang dada</li>
-                                    <li>Tumpangkan tangan lain di atas tinju</li>
-                                    <li>Lakukan dorongan ke dalam dan ke atas dengan cepat</li>
-                                    <li>Ulangi hingga benda asing keluar atau korban kehilangan kesadaran</li>
-                                </ol>
-                            </li>
-                            <li><strong>Bayi (<1 tahun):</strong> Lakukan 5 pukulan punggung di antara bahu, lalu 5 kompresi dada dengan dua jari. Ulangi siklus.</li>
-                        </ul>
-                        <p><strong>Hipotermia:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Ringan:</strong> Menggigil, kulit dingin, kebingungan ringan. Penanganan: pindahkan ke tempat hangat, ganti pakaian kering, beri minuman hangat non-alkohol, selimuti.</li>
-                            <li><strong>Sedang:</strong> Menggigil berhenti, kebingungan berat, somnolen. Penanganan: hindari penghangatan agresif, gunakan selimut hangat, transportasi hati-hati ke RS.</li>
-                            <li><strong>Berat:</strong> Tidak sadar, napas sangat lambat, denyut nadi sulit diraba. Penanganan: perlakukan sebagai kegawatdaruratan. Jangan memberi minuman, jangan menggosok tubuh. Transportasi segera ke RS dengan hati-hati.</li>
-                        </ul>
-                        <p><strong>Hiperglikemia & Hipoglikemia:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Hipoglikemia (Gula Darah Rendah):</strong> Keringat dingin, gemetar, pusing, lemas, bingung, kesadaran menurun. Penanganan: Berikan glukosa cepat (gula pasir, jus manis) jika korban sadar. Jika tidak sadar, jangan beri apa-apa melalui mulut, segera rujuk.</li>
-                            <li><strong>Hiperglikemia (Gula Darah Tinggi):</strong> Haus berlebihan, sering buang air kecil, napas berbau buah (ketosis), kebingungan, keletihan. Penanganan: jangan memberi insulin sembarangan. Jaga hidrasi jika sadar, segera rujuk.</li>
-                        </ul>
-                    </div>
-                    <div class="question-card">
-                        <h3>⚠️ Kontra Indikasi & Kesalahan Umum</h3>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Jangan memberi makan/minum pada korban tidak sadar (risiko aspirasi)</li>
-                            <li>Jangan mencabut benda asing yang menancap (berisiko perdarahan masif)</li>
-                            <li>Jangan menggunakan es langsung di kulit (risiko radang dingin)</li>
-                            <li>Jangan membantu orang yang tersedak jika mereka masih bisa batuk atau bernapas</li>
-                            <li>Jangan menggerakkan korban cedera tulang belakang tanpa imobilisasi</li>
-                            <li>Jangan memberikan obat sembarangan tanpa resep atau arahan medis</li>
-                            <li>Jangan memuntahkan korban overdosis</li>
-                            <li>Jangan memberi alkohol untuk menghangatkan</li>
-                            <li>Jangan menghisap racun dari gigitan ular</li>
-                        </ul>
-                    </div>
+                    <div id="p3kMaterials" class="loading">⏳ Memuat materi P3K...</div>
                 </div>
             </div>
             <!-- Pramuka Materials Tab -->
             <div id="pramuka" class="tab-content">
                 <div class="quiz-container">
                     <h2 style="color: #667eea; margin-bottom: 20px;">⚡ Materi Kepramukaan</h2>
-                    <div class="question-card">
-                        <h3>🎖️ Sejarah & Filosofi Kepramukaan</h3>
-                        <p><strong>Tokoh-tokoh Penting:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Lord Robert Stephenson Smyth Baden-Powell:</strong> Pendiri Gerakan Pramuka Sedunia. Mendirikan perkemahan pertama di Pulau Brownsea, Inggris, pada tahun 1907.</li>
-                            <li><strong>Sri Sultan Hamengku Buwono IX:</strong> Ditetapkan sebagai Bapak Pramuka Indonesia. Beliau memimpin penyusunan sistem pendidikan kepramukaan nasional.</li>
-                            <li><strong>Aziz Saleh:</strong> Tokoh perintis Gerakan Pramuka di Indonesia yang aktif dalam organisasi kepanduan sebelumnya.</li>
-                            <li><strong>Julius (Ju) van der Meij:</strong> Pendiri Gerakan Pandu di Hindia Belanda (1912).</li>
-                        </ul>
-                        <p><strong>Sejarah Gerakan Pramuka Indonesia:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>1912: Berdirinya Gerakan Pandu di Hindia Belanda.</li>
-                            <li>1928: Kongres Pemuda II, Sumpah Pemuda menjadi dasar semangat persatuan.</li>
-                            <li>1930-an: Muncul berbagai organisasi kepanduan nasional (IPSI, PKI, dll).</li>
-                            <li>1961: 14 Agustus 1961, Presiden Soekarno menetapkan Keputusan Presiden No. 238 Tahun 1961 tentang Gerakan Pramuka, menyatukan semua organisasi kepanduan menjadi satu badan nasional.</li>
-                            <li>1980: Penerapan sistem satuan karya (SAKA) untuk pengembangan keterampilan khusus.</li>
-                            <li>2005: Penerapan Kurikulum Keterampilan Pramuka (KKP) dan sistem penilaian berbasis kompetensi.</li>
-                            <li>2020: Revitalisasi Gerakan Pramuka berdasarkan Peraturan Kwartir Nasional Nomor 04 Tahun 2020 tentang Strategi Pengembangan Gerakan Pramuka 2020-2025.</li>
-                        </ul>
-                        <p><strong>Filosofi Kepramukaan:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Belajar sambil bermain (Learning by Doing)</li>
-                            <li>System of Self-Education</li>
-                            <li>Small Group System (Sistem Beregu/Patrol)</li>
-                            <li>Progressive and Attractive Program</li>
-                            <li>Community Involvement</li>
-                            <li>Symbolism</li>
-                            <li>Outdoor Program</li>
-                        </ul>
+                    <div id="pramukaMaterials" class="loading">⏳ Memuat materi Pramuka...</div>
+                </div>
+            </div>
+            <!-- Boyman 2016 Reference Tab -->
+            <div id="boyman" class="tab-content">
+                <div class="quiz-container">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">📘 Referensi Resmi BOYMAN 2016</h2>
+                    <div class="material-section">
+                        <h3>📖 BAB III: Biografi Lord Robert Baden-Powell</h3>
+                        <div id="boyman-iii-materials" class="loading">⏳ Memuat materi BAB III...</div>
                     </div>
-                    <div class="question-card">
-                        <h3>🏕️ Teknik Kepramukaan Lanjutan</h3>
-                        <p><strong>Keterampilan Dasar dan Lanjutan:</strong></p>
-                        <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Pioneering (Pembuatan Konstruksi):</strong>
-                                <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li>Simpul dasar: Simpul Mati (Clove Hitch), Simpul Hambat (Half Hitch), Simpul Liar (Timber Hitch), Simpul Jangkar (Anchor Knot)</li>
-                                    <li>Sistem ikatan: Ikatan Silang (Square Lashing), Ikatan Ganda (Shear Lashing), Ikatan Tiga (Round Lashing), Ikatan Empat (Diagonal Lashing)</li>
-                                    <li>Struktur: Jembatan, Menara, Gerbang, Tempat Tidur, Shelter, Tower</li>
-                                    <li>Prinsip: Stabilitas, Keseimbangan, Kekuatan, Efisiensi material</li>
-                                </ul>
-                            </li>
-                            <li><strong>Orienteering (Navigasi):</strong>
-                                <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li>Peta topografi: simbol, skala, garis kontur, legenda</li>
-                                    <li>Kompas: bagian-bagian (jarum, dial, baseplate, orienting arrow, direction-of-travel arrow), cara membaca azimuth, cara mengatur declination</li>
-                                    <li>Metode navigasi: Triangulasi, Dead Reckoning, Follow a Bearing</li>
-                                    <li>GPS dan aplikasi navigasi modern sebagai alat bantu, bukan pengganti keterampilan dasar</li>
-                                </ul>
-                            </li>
-                            <li><strong>Survival Skills (Bertahan Hidup):</strong>
-                                <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li>Shelter: Memilih lokasi, membuat shelter dari daun, cabang, tenda darurat</li>
-                                    <li>Api: Metode flint & steel, lensa, battery & steel wool, bow drill</li>
-                                    <li>Air: Menemukan sumber air, metode penyaringan (sand filter, cloth filter), metode mendidih, metode desinfeksi kimia (iodine, chlorine)</li>
-                                    <li>Makanan: Mengenali tumbuhan liar aman (dengan prinsip "Universal Edibility Test"), menangkap ikan dan hewan kecil secara etis</li>
-                                    <li>Pertolongan Pertama di Alam Terbuka: Penanganan gigitan ular, sengatan serangga, hipotermia, dehidrasi</li>
-                                </ul>
-                            </li>
-                            <li><strong>Communication (Komunikasi):</strong>
-                                <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                                    <li>Sandi Morse: Titik (.) dan Garis (-). Contoh: S = ..., O = ---, SOS = ...---...</li>
-                                    <li>Sandi Isyarat Tangan: Isyarat standar untuk komunikasi diam di lapangan (misalnya: "Aman", "Bahaya", "Tolong", "Maju", "Mundur")</li>
-                                    <li>Sandi Bendera: Semaphore (bendera dua warna) dan Flaghoist</li>
-                                    <li>Sinyal Suara: Peluit (3 tiup = bahaya, 1 tiup = kumpul), teriakan, sirine</li>
-                                </ul>
-                            </li>
-                            <li><strong>First Aid in the Field:</strong> Integrasi P3K dalam kegiatan luar ruang, termasuk penanganan luka akibat kecelakaan, cuaca ekstrem, dan serangan hewan.</li>
-                        </ol>
+                    <div class="material-section">
+                        <h3>📖 BAB IV: Sejarah Kepanduan & Kepramukaan</h3>
+                        <div id="boyman-iv-materials" class="loading">⏳ Memuat materi BAB IV...</div>
                     </div>
-                    <div class="question-card">
-                        <h3>🎯 Kode Kehormatan, Struktur & Sistem</h3>
-                        <p><strong>Tri Satya:</strong></p>
-                        <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Demi kehormatanku aku berjanji akan bersungguh-sungguh menjalankan kewajibanku terhadap Tuhan Yang Maha Esa dan Negara Kesatuan Republik Indonesia, yang berdasarkan Pancasila dan UUD 1945.</li>
-                            <li>Menolong sesama hidup dan ikut serta membangun masyarakat.</li>
-                            <li>Menepati Dasa Dharma.</li>
-                        </ol>
-                        <p><strong>Dasa Dharma:</strong></p>
-                        <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Takwa kepada Tuhan Yang Maha Esa</li>
-                            <li>Cinta alam dan kasih sayang sesama manusia</li>
-                            <li>Patriot yang sopan dan kesatria</li>
-                            <li>Patuh dan suka bermusyawarah</li>
-                            <li>Rela menolong dan tabah</li>
-                            <li>Disiplin, berani, dan setia</li>
-                            <li>Disiplin, berani, dan setia</li>
-                            <li>Bersih dan sehat</li>
-                            <li>Bekerja sama</li>
-                            <li>Berkarya, berusaha, dan mandiri</li>
-                        </ol>
-                        <p><strong>Tingkatan Pramuka:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Siaga (7-10 tahun):</strong> Fokus pada permainan, kedisiplinan dasar, dan pengenalan nilai-nilai.</li>
-                            <li><strong>Penggalang (11-15 tahun):</strong> Fokus pada keterampilan, kerja tim, dan tanggung jawab. Sistem beregu (Patrol System) diterapkan.</li>
-                            <li><strong>Penegak (16-20 tahun):</strong> Fokus pada kepemimpinan, pengabdian, dan pengembangan karakter. Membina generasi muda.</li>
-                            <li><strong>Pandega (21-25 tahun):</strong> Fokus pada pengabdian sosial, advokasi, dan pengembangan program. Menjadi mentor dan penggerak.</li>
-                        </ul>
-                        <p><strong>Struktur Organisasi:</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Kwartir Nasional (Kwarnas)</li>
-                            <li>Kwartir Daerah (Kwarda)</li>
-                            <li>Kwartir Cabang (Kwarcab)</li>
-                            <li>Kwartir Ranting (Kwaran)</li>
-                            <li>Gugusdepan (Gudep)</li>
-                            <li>Regu (Ruang lingkup minimal unit operasional)</li>
-                        </ul>
-                        <p><strong>Satuan Karya (SAKA):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>SAKA Bhayangkara: Ilmu Kepolisian dan Keamanan</li>
-                            <li>SAKA Bakti Husada: Ilmu Kesehatan dan P3K</li>
-                            <li>SAKA Taruna Bumi: Ilmu Pertanian dan Lingkungan Hidup</li>
-                            <li>SAKA Bahari: Ilmu Kelautan dan Pelayaran</li>
-                            <li>SAKA Wira Kartika: Ilmu Militer dan Ketahanan Nasional</li>
-                            <li>SAKA Dirgantara: Ilmu Penerbangan dan Antariksa</li>
-                            <li>SAKA Wanabhakti: Ilmu Kehutanan dan Lingkungan Hidup</li>
-                            <li>SAKA Pariwisata: Ilmu Kepariwisataan</li>
-                            <li>SAKA Kencana: Ilmu Informasi dan Komunikasi</li>
-                            <li>SAKA Kalpika: Ilmu Penciptaan dan Pemanfaatan Teknologi</li>
-                        </ul>
+                    <div class="material-section">
+                        <h3>📖 BAB VII: Pengetahuan Kepramukaan</h3>
+                        <div id="boyman-vii-materials" class="loading">⏳ Memuat materi BAB VII...</div>
                     </div>
-                    <div class="question-card">
-                        <h3>🌿 Etika dan Prinsip Kelestarian Lingkungan</h3>
-                        <p><strong>Leave No Trace (LNT) - 7 Prinsip:</strong></p>
-                        <ol style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li><strong>Plan Ahead and Prepare:</strong> Persiapkan perjalanan dengan baik, tahu aturan dan kondisi area, bawa peralatan yang tepat.</li>
-                            <li><strong>Travel and Camp on Durable Surfaces:</strong> Gunakan jalan dan area berkemah yang sudah ada. Hindari merusak vegetasi.</li>
-                            <li><strong>Dispose of Waste Properly:</strong> Bawa semua sampah kembali. Gunakan toilet portabel atau gali lubang jauh dari sumber air (minimal 60 meter). Jangan buang sabun atau deterjen ke sungai.</li>
-                            <li><strong>Leave What You Find:</strong> Jangan mengambil batu, bunga, ranting, atau artefak. Biarkan alam tetap utuh untuk orang lain.</li>
-                            <li><strong>Minimize Campfire Impacts:</strong> Gunakan kompor daripada api unggun. Jika harus membuat api, gunakan area yang sudah disediakan, gunakan kayu mati, dan padamkan sepenuhnya.</li>
-                            <li><strong>Respect Wildlife:</strong> Amati hewan dari jarak jauh. Jangan memberi makan. Simpan makanan dengan benar agar tidak menarik hewan liar.</li>
-                            <li><strong>Be Considerate of Other Visitors:</strong> Hormati pengunjung lain. Jaga keheningan, jangan menyalakan musik keras, beri jalan pada pejalan kaki.</li>
-                        </ol>
-                        <p><strong>Prinsip Kepemimpinan Pramuka (Leadership Principles):</strong></p>
-                        <ul style="margin: 10px 0 10px 20px; line-height: 1.8;">
-                            <li>Lead by Example (Teladan)</li>
-                            <li>Know Your People (Kenali Anggota)</li>
-                            <li>Develop Others (Kembangkan Orang Lain)</li>
-                            <li>Communicate Effectively (Komunikasi Efektif)</li>
-                            <li>Make Decisions (Ambil Keputusan)</li>
-                            <li>Build Team Spirit (Bangun Semangat Tim)</li>
-                            <li>Take Responsibility (Ambil Tanggung Jawab)</li>
-                        </ul>
+                    <div class="material-section">
+                        <h3>📖 BAB XXIV: PPPK & Kesehatan</h3>
+                        <div id="boyman-xxiv-materials" class="loading">⏳ Memuat materi BAB XXIV...</div>
+                    </div>
+                    <div class="material-section">
+                        <h3>📖 BAB XXIX: Pengetahuan Umum & Wawasan</h3>
+                        <div id="boyman-xxix-materials" class="loading">⏳ Memuat materi BAB XXIX...</div>
                     </div>
                 </div>
             </div>
+            <!-- History Tab -->
+            <div id="history" class="tab-content">
+                <div class="controls">
+                    <h2 style="color: var(--primary); text-align: center; margin-bottom: 20px;">📋 Riwayat Hasil Kuis Anda</h2>
+                    <p style="text-align: center; color: #666; margin-bottom: 30px;">Semua hasil kuis yang telah Anda selesaikan akan disimpan di sini secara otomatis.</p>
+                </div>
+                <div class="history-container" id="historyContainer">
+                    <div class="loading">⏳ Memuat riwayat kuis...</div>
+                </div>
+                <button class="clear-history-btn" onclick="clearHistory()">🗑️ Hapus Semua Riwayat</button>
+            </div>
         </div>
     </div>
-
-    <!-- Modal for Quiz Results -->
+    <!-- Modal for Detailed Results -->
     <div id="resultModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modalContent"></div>
         </div>
     </div>
-
     <script>
-        // Bank soal P3K dan Pramuka yang lebih lengkap dan kompleks
-        const questionBank = [
-            // =====================================
-            // P3K - Dasar & Protokol (Soal 1-15)
-            // =====================================
-            {
-                id: 1, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Golden Hour" dalam penanganan kedaruratan medis?',
-                options: [
-                    'Waktu 1 jam pertama setelah kecelakaan yang kritis untuk penyelamatan',
-                    'Waktu istirahat petugas medis',
-                    'Jam operasional rumah sakit',
-                    'Waktu pemberian obat'
-                ],
-                correct: 0,
-                explanation: 'Golden Hour adalah periode 60 menit pertama setelah trauma atau kecelakaan yang sangat kritis untuk keberhasilan penanganan medis dan keselamatan korban. Penanganan yang cepat dan tepat dalam periode ini dapat menentukan hidup mati korban. Konsep ini mendorong sistem ambulans darurat (EMS) untuk meminimalkan waktu transportasi.'
-            },
-            {
-                id: 2, category: 'p3k',
-                question: 'Dalam protokol DRABC, apa yang dilakukan pada tahap "Response"?',
-                options: [
-                    'Memeriksa pernapasan korban',
-                    'Mengguncang pundak korban sambil berteriak untuk mengecek kesadaran',
-                    'Memeriksa denyut nadi',
-                    'Mencari bantuan medis'
-                ],
-                correct: 1,
-                explanation: 'Tahap Response dalam DRABC adalah mengecek tingkat kesadaran korban dengan cara mengguncang pundak secara perlahan sambil berteriak "Apakah Anda baik-baik saja?" untuk menentukan apakah korban sadar atau tidak sadar. Jika tidak ada respon, segera panggil bantuan dan lanjutkan ke Airway.'
-            },
-            {
-                id: 3, category: 'p3k',
-                question: 'Berapa kedalaman kompresi dada yang benar saat melakukan CPR pada orang dewasa?',
-                options: [
-                    '2-3 cm',
-                    '3-4 cm', 
-                    '5-6 cm',
-                    '7-8 cm'
-                ],
-                correct: 2,
-                explanation: 'Kedalaman kompresi dada yang benar untuk orang dewasa adalah 5-6 cm (minimal 5 cm, maksimal 6 cm). Kompresi yang terlalu dangkal tidak efektif dalam memompa darah, sementara yang terlalu dalam dapat menyebabkan cedera pada tulang rusuk, sternum, atau organ dalam. Kecepatan kompresi ideal adalah 100-120 kali per menit.'
-            },
-            {
-                id: 4, category: 'p3k',
-                question: 'Apa tanda utama syok hipovolemik?',
-                options: [
-                    'Demam tinggi',
-                    'Kulit pucat, dingin, berkeringat, nadi cepat lemah',
-                    'Kesulitan bernapas',
-                    'Sakit kepala hebat'
-                ],
-                correct: 1,
-                explanation: 'Syok hipovolemik ditandai dengan kulit pucat, dingin, berkeringat (clammy), nadi cepat tapi lemah, tekanan darah rendah, dan penurunan kesadaran. Ini terjadi karena kehilangan volume darah atau cairan tubuh.'
-            },
-            {
-                id: 5, category: 'p3k',
-                question: 'Penanganan pertama pada luka bakar derajat 2 yang benar adalah:',
-                options: [
-                    'Mengoleskan mentega atau minyak',
-                    'Menusuk gelembung air yang terbentuk',
-                    'Menyiram dengan air dingin mengalir selama 15-20 menit',
-                    'Mengoleskan pasta gigi'
-                ],
-                correct: 2,
-                explanation: 'Penanganan luka bakar derajat 2 yang benar adalah segera menyiram dengan air dingin mengalir selama 15-20 menit untuk menurunkan suhu jaringan, mengurangi kerusakan, dan mengurangi rasa sakit. Jangan gunakan es, mentega, atau bahan lain karena dapat memperparah kerusakan jaringan.'
-            },
-            {
-                id: 6, category: 'p3k',
-                question: 'Teknik Heimlich Maneuver digunakan untuk mengatasi:',
-                options: [
-                    'Henti jantung',
-                    'Tersedak benda asing di jalan napas',
-                    'Patah tulang',
-                    'Perdarahan hebat'
-                ],
-                correct: 1,
-                explanation: 'Heimlich Maneuver atau abdominal thrust adalah teknik untuk mengeluarkan benda asing yang menyumbat jalan napas dengan memberikan tekanan ke atas pada diafragma untuk mendorong udara keluar dari paru-paru. Teknik ini hanya digunakan pada korban yang tidak bisa bicara, batuk, atau bernapas.'
-            },
-            {
-                id: 7, category: 'p3k',
-                question: 'Posisi pemulihan (recovery position) digunakan untuk:',
-                options: [
-                    'Korban patah tulang belakang',
-                    'Korban tidak sadar tetapi bernapas normal',
-                    'Korban henti jantung',
-                    'Korban perdarahan hebat'
-                ],
-                correct: 1,
-                explanation: 'Recovery position digunakan untuk korban yang tidak sadar tetapi masih bernapas normal. Posisi ini mencegah lidah menutupi jalan napas dan memungkinkan muntahan keluar tanpa masuk ke paru-paru. Ini adalah posisi aman untuk korban yang tidak sadar.'
-            },
-            {
-                id: 8, category: 'p3k',
-                question: 'Prinsip RICE dalam penanganan cedera otot dan sendi adalah:',
-                options: [
-                    'Rest, Ice, Compression, Elevation',
-                    'Rescue, Immediate, Care, Emergency',
-                    'Rapid, Intensive, Critical, Emergency',
-                    'Recovery, Injury, Care, Examination'
-                ],
-                correct: 0,
-                explanation: 'RICE adalah protokol penanganan cedera akut: Rest (istirahat), Ice (es/dingin), Compression (penekanan), Elevation (elevasi/mengangkat bagian cedera lebih tinggi dari jantung) untuk mengurangi pembengkakan dan nyeri. Protokol ini umum digunakan untuk sprain, strain, dan edema.'
-            },
-            {
-                id: 9, category: 'p3k',
-                question: 'Tanda-tanda stroke yang harus dikenali (FAST method):',
-                options: [
-                    'Fever, Arm, Speech, Time',
-                    'Face, Arm, Speech, Time',
-                    'First, Aid, Support, Transport',
-                    'Find, Assess, Stabilize, Transport'
-                ],
-                correct: 1,
-                explanation: 'FAST adalah metode mengenali stroke: Face (wajah mencong), Arm (kelemahan lengan), Speech (bicara pelo/tidak jelas), Time (waktu untuk segera ke RS). Deteksi dini stroke sangat penting untuk prognosis karena terapi trombolitik hanya efektif dalam beberapa jam pertama.'
-            },
-            {
-                id: 10, category: 'p3k',
-                question: 'Penanganan hipotermia tingkat ringan meliputi:',
-                options: [
-                    'Menggosok tubuh korban dengan kuat',
-                    'Merendam dalam air panas',
-                    'Menghangatkan secara perlahan dengan selimut dan minuman hangat',
-                    'Memberikan alkohol untuk menghangatkan'
-                ],
-                correct: 2,
-                explanation: 'Hipotermia ringan ditangani dengan menghangatkan korban secara perlahan menggunakan selimut, pakaian kering, dan minuman hangat (bukan alkohol). Hindari pemanasan cepat yang dapat menyebabkan syok kardiovaskular. Gosokan kasar juga dilarang karena dapat menyebabkan aritmia.'
-            },
-            {
-                id: 11, category: 'p3k',
-                question: 'Dalam kasus overdosis narkoba, apa yang TIDAK boleh dilakukan?',
-                options: [
-                    'Memuntahkan korban secara paksa',
-                    'Memeriksa jalan napas',
-                    'Memonitor tanda vital',
-                    'Memanggil ambulans'
-                ],
-                correct: 0,
-                explanation: 'Jangan pernah memuntahkan korban overdosis secara paksa karena dapat menyebabkan aspirasi (masuknya muntah ke paru-paru) yang berpotensi fatal. Fokus pada menjaga jalan napas, monitoring tanda vital, dan segera hubungi layanan darurat medis. Jika tersedia, berikan naloxone (jika overdosis opioid).'
-            },
-            {
-                id: 12, category: 'p3k',
-                question: 'Teknik jaw thrust digunakan ketika:',
-                options: [
-                    'Korban mengalami patah rahang',
-                    'Dicurigai cedera tulang belakang leher',
-                    'Korban tidak sadar biasa',
-                    'Korban tersedak'
-                ],
-                correct: 1,
-                explanation: 'Jaw thrust (dorong rahang) digunakan untuk membuka jalan napas pada korban yang dicurigai mengalami cedera tulang belakang leher, karena teknik ini tidak melibatkan gerakan kepala dan leher yang dapat memperparah cedera spinal. Teknik ini lebih aman daripada head tilt-chin lift dalam situasi trauma dugaan spinal.'
-            },
-            {
-                id: 13, category: 'p3k',
-                question: 'Anaphylactic shock paling sering disebabkan oleh:',
-                options: [
-                    'Kehilangan darah',
-                    'Reaksi alergi berat',
-                    'Infeksi bakteri',
-                    'Trauma kepala'
-                ],
-                correct: 1,
-                explanation: 'Anaphylactic shock adalah reaksi alergi sistemik yang mengancam jiwa. Dapat disebabkan oleh makanan (kacang, telur, seafood), obat-obatan (penisilin), sengatan serangga (tawon, lebah), atau alergen lain. Memerlukan pemberian epinefrin intramuskuler segera dan transportasi darurat ke RS. Gejala: urtikaria, edema laring, bronkospasme, hipotensi, kehilangan kesadaran.'
-            },
-            {
-                id: 14, category: 'p3k',
-                question: 'Tanda utama pneumothorax tension adalah:',
-                options: [
-                    'Nyeri dada, sesak napas, penurunan suara napas pada satu sisi',
-                    'Demam tinggi',
-                    'Nyeri perut',
-                    'Pusing dan mual'
-                ],
-                correct: 0,
-                explanation: 'Pneumothorax tension adalah keadaan darurat medis di mana udara masuk ke rongga pleura dan terperangkap, menyebabkan tekanan meningkat yang menekan paru-paru dan jantung. Tanda: nyeri dada mendadak, sesak napas berat, penurunan atau hilangnya suara napas pada sisi yang terkena, deviasi trakea, distensi vena leher, sianosis, dan syok. Memerlukan dekompresi segera dengan jarum atau pipa torakostomi.'
-            },
-            {
-                id: 15, category: 'p3k',
-                question: 'Pada kasus gigitan ular berbisa, yang harus dilakukan adalah:',
-                options: [
-                    'Mengiris luka untuk mengeluarkan racun',
-                    'Immobilisasi anggota tubuh, tetap tenang, segera ke RS',
-                    'Menghisap racun dari luka',
-                    'Memberikan alkohol untuk melawan racun'
-                ],
-                correct: 1,
-                explanation: 'Penanganan gigitan ular berbisa: jangan panik, immobilisasi bagian yang tergigit (gunakan balutan elastis longgar atau splint), jangan bergerak berlebihan, lepas perhiasan sebelum bengkak, dan segera transportasi ke RS untuk pemberian anti-venom. Hindari mengiris, menghisap, atau mengompres luka karena tidak efektif dan berisiko.'
-            },
-            // =====================================
-            // P3K - Lanjutan & Kasus (Soal 16-30)
-            // =====================================
-            {
-                id: 16, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Chain of Survival" dalam CPR?',
-                options: [
-                    'Rantai kehidupan yang terdiri dari lima tindakan penting',
-                    'Jaringan komunikasi antar rumah sakit',
-                    'Program latihan rutin petugas medis',
-                    'Sistem transportasi darurat'
-                ],
-                correct: 0,
-                explanation: 'Chain of Survival adalah rangkaian tindakan yang saling terkait untuk meningkatkan peluang bertahan hidup pada henti jantung. Lima tindakan: 1) Recognize cardiac arrest and call emergency services, 2) Early CPR, 3) Rapid defibrillation, 4) Advanced life support, 5) Post-cardiac arrest care.'
-            },
-            {
-                id: 17, category: 'p3k',
-                question: 'Kapan sebaiknya menggunakan AED (Automated External Defibrillator)?',
-                options: [
-                    'Hanya jika korban memiliki riwayat jantung',
-                    'Setelah 5 siklus CPR jika korban tidak sadar dan tidak bernapas',
-                    'Segera setelah korban kehilangan kesadaran dan tidak bernapas, bahkan sebelum CPR',
-                    'Hanya jika tersedia dokter'
-                ],
-                correct: 1,
-                explanation: 'AED sebaiknya digunakan secepat mungkin setelah korban kehilangan kesadaran dan tidak bernapas. Setelah memastikan tidak ada denyut nadi, segera nyalakan AED dan ikuti instruksi suara. AED akan menganalisis irama jantung dan memberikan kejutan listrik jika dibutuhkan. Jangan menunda CPR untuk mencari AED jika jaraknya jauh, namun segera cari AED jika ada.'
-            },
-            {
-                id: 18, category: 'p3k',
-                question: 'Bagaimana cara menangani korban yang mengalami kejang epilepsi?',
-                options: [
-                    'Masukkan benda ke dalam mulut untuk mencegah gigitan lidah',
-                    'Tahan gerakan tubuh korban agar tidak bergerak',
-                    'Letakkan korban di tempat aman, singkirkan benda tajam, jangan memasukkan apa-apa ke mulut',
-                    'Berikan air atau obat segera setelah kejang berhenti'
-                ],
-                correct: 2,
-                explanation: 'Jangan memasukkan benda apa pun ke mulut korban karena dapat menyebabkan cedera atau aspirasi. Jangan menahan gerakan korban. Letakkan korban di tempat datar, singkirkan benda tajam, lepaskan pakaian ketat di leher, dan berikan ruang. Setelah kejang berhenti, putar korban ke posisi pemulihan. Catat durasi kejang dan segera hubungi layanan darurat jika kejang lebih dari 5 menit atau berulang.'
-            },
-            {
-                id: 19, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Shock Position"?',
-                options: [
-                    'Posisi duduk dengan tangan di atas kepala',
-                    'Posisi telentang dengan kaki diangkat 30 cm',
-                    'Posisi tengkurap',
-                    'Posisi miring dengan satu lutut ditekuk'
-                ],
-                correct: 1,
-                explanation: 'Shock position adalah posisi telentang dengan kaki diangkat sekitar 30 cm di atas tingkat jantung. Tujuannya adalah untuk meningkatkan aliran darah kembali ke jantung dan otak, terutama pada korban syok hipovolemik. Namun, jangan gunakan posisi ini jika ada cedera kepala, dada, atau tulang belakang.'
-            },
-            {
-                id: 20, category: 'p3k',
-                question: 'Kapan CPR harus dihentikan?',
-                options: [
-                    'Setelah 10 menit',
-                    'Ketika korban mulai bernapas normal atau sadar',
-                    'Ketika penolong lelah',
-                    'Ketika ambulans tiba'
-                ],
-                correct: 1,
-                explanation: 'CPR harus dihentikan jika: 1) Korban mulai bernapas normal atau sadar, 2) Petugas medis profesional tiba dan mengambil alih, 3) Anda terlalu lelah untuk melanjutkan, 4) Situasi menjadi tidak aman. Jangan berhenti hanya karena tidak ada respons dalam beberapa menit, kecuali ada indikasi pasti bahwa korban tidak mungkin diselamatkan (misalnya rigor mortis, lividity).'
-            },
-            {
-                id: 21, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Agonal Breaths"?',
-                options: [
-                    'Napas cepat dan dalam',
-                    'Napas yang tidak teratur, mendesah, atau berupa isapan',
-                    'Napas yang sangat dalam dan pelan',
-                    'Napas yang tidak ada sama sekali'
-                ],
-                correct: 1,
-                explanation: 'Agonal breaths adalah pola pernapasan abnormal yang terjadi pada awal henti jantung. Napas ini tidak efektif, tidak cukup untuk oksigenasi, dan merupakan tanda bahwa korban membutuhkan CPR segera. Jangan salah mengartikan agonal breaths sebagai tanda korban masih bernapas. Jika korban tidak sadar dan bernapas tidak normal, segera mulai CPR.'
-            },
-            {
-                id: 22, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Chest Compressions Only" CPR?',
-                options: [
-                    'CPR tanpa napas buatan, hanya kompresi dada',
-                    'CPR dengan napas buatan lebih banyak',
-                    'CPR yang dilakukan hanya oleh petugas medis',
-                    'CPR yang dilakukan pada bayi'
-                ],
-                correct: 0,
-                explanation: 'Chest Compressions Only (Hands-Only CPR) adalah bentuk CPR yang hanya melibatkan kompresi dada tanpa napas buatan. Direkomendasikan untuk penolong awam yang tidak terlatih atau tidak nyaman memberi napas buatan, terutama pada kasus henti jantung mendadak pada dewasa. Studi menunjukkan bahwa Hands-Only CPR sama efektifnya dengan CPR konvensional dalam beberapa jam pertama.'
-            },
-            {
-                id: 23, category: 'p3k',
-                question: 'Apa tanda-tanda cedera kepala berat?',
-                options: [
-                    'Sakit kepala ringan dan pusing',
-                    'Mual dan muntah',
-                    'Kehilangan kesadaran, kebingungan, kejang, pupil tidak sama, cairan dari hidung/telinga',
-                    'Keringat dingin'
-                ],
-                correct: 2,
-                explanation: 'Cedera kepala berat ditandai dengan kehilangan kesadaran (meskipun sebentar), kebingungan, kejang, pupil tidak sama besar, cairan bening atau berdarah dari hidung atau telinga, kelemahan atau mati rasa pada satu sisi tubuh, muntah berulang, dan perubahan perilaku. Semua kasus ini memerlukan evaluasi medis segera dan imobilisasi tulang belakang leher.'
-            },
-            {
-                id: 24, category: 'p3k',
-                question: 'Apa yang harus dilakukan pada korban yang mengalami sengatan listrik?',
-                options: [
-                    'Langsung sentuh korban untuk menolong',
-                    'Matikan sumber listrik sebelum menyentuh korban',
-                    'Berikan air minum',
-                    'Beri kompres dingin'
-                ],
-                correct: 1,
-                explanation: 'Saat menolong korban sengatan listrik, prioritas utama adalah memastikan keamanan penolong. Jangan menyentuh korban sampai sumber listrik dimatikan. Gunakan benda non-konduktif (kayu, plastik) untuk memindahkan kabel. Setelah aman, periksa kesadaran dan napas. Jika tidak sadar dan tidak bernapas, segera mulai CPR. Sengatan listrik dapat menyebabkan henti jantung, luka bakar internal, dan cedera otot.'
-            },
-            {
-                id: 25, category: 'p3k',
-                question: 'Apa itu "EpiPen"?',
-                options: [
-                    'Alat untuk mengukur tekanan darah',
-                    'Obat antivirus',
-                    'Auto-injector epinefrin untuk reaksi alergi berat',
-                    'Alat untuk membersihkan luka'
-                ],
-                correct: 2,
-                explanation: 'EpiPen adalah merek dagang dari auto-injector epinefrin. Epinefrin adalah hormon yang bekerja sebagai vasokonstriktor dan bronkodilator. Digunakan untuk mengobati anafilaksis. Cara penggunaan: tarik penutup, tekan kuat ke paha luar (melalui pakaian), tahan 10 detik. Segera hubungi ambulans setelah injeksi.'
-            },
-            {
-                id: 26, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Decompression Sickness"?',
-                options: [
-                    'Keracunan karbon monoksida',
-                    'Penyakit akibat kecepatan turun terlalu cepat saat menyelam',
-                    'Dehidrasi ekstrem',
-                    'Kehilangan daya ingat'
-                ],
-                correct: 1,
-                explanation: 'Decompression sickness (DCS) atau "the bends" adalah kondisi yang terjadi saat nitrogen yang terlarut dalam darah membentuk gelembung karena penurunan tekanan secara cepat (misalnya saat naik terlalu cepat dari menyelam). Gejala: nyeri sendi, kelelahan, kesemutan, pusing, kehilangan kesadaran. Penanganan: berikan oksigen 100%, segera bawa ke fasilitas terapi hiperbarik.'
-            },
-            {
-                id: 27, category: 'p3k',
-                question: 'Apa yang harus dilakukan jika korban mengalami kecelakaan kendaraan dengan kebakaran?',
-                options: [
-                    'Tetap di dalam mobil sampai api padam',
-                    'Segera evakuasi korban dari mobil dan jauhi area berbahaya',
-                    'Coba padamkan api dengan air',
-                    'Tunggu petugas pemadam kebakaran'
-                ],
-                correct: 1,
-                explanation: 'Jika mobil terbakar, prioritas utama adalah menyelamatkan nyawa. Segera evakuasi korban dari mobil secepat mungkin, menjauhi area berbahaya (api, asap, ledakan). Jangan ragu untuk memecahkan jendela jika pintu tidak bisa dibuka. Jangan khawatir dengan cedera tulang belakang jika nyawa sedang dalam bahaya. Setelah aman, baru lakukan imobilisasi.'
-            },
-            {
-                id: 28, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Hyperventilation Syndrome"?',
-                options: [
-                    'Terlalu banyak makan',
-                    'Pernapasan terlalu cepat dan dalam yang menyebabkan penurunan CO2 darah',
-                    'Kesulitan bernapas karena asma',
-                    'Kematian karena kekurangan oksigen'
-                ],
-                correct: 1,
-                explanation: 'Hyperventilation syndrome adalah kondisi di mana seseorang bernapas terlalu cepat dan dalam, menyebabkan penurunan kadar karbon dioksida (CO2) dalam darah. Gejala: kesemutan di tangan dan kaki, pusing, mati rasa, kejang, kecemasan. Penanganan: tenangkan korban, ajak bernapas perlahan, bisa dengan menutup mulut dan hidung untuk menghirup kembali CO2.'
-            },
-            {
-                id: 29, category: 'p3k',
-                question: 'Apa yang dimaksud dengan "Coup-contrecoup injury"?',
-                options: [
-                    'Cedera pada dua organ berbeda',
-                    'Cedera kepala akibat benturan di dua sisi otak',
-                    'Cedera tulang belakang akibat jatuh',
-                    'Cedera otot akibat olahraga'
-                ],
-                correct: 1,
-                explanation: 'Coup-contrecoup injury adalah jenis cedera kepala di mana otak mengalami trauma di dua lokasi: di tempat benturan (coup) dan di sisi berlawanan (contrecoup). Ini terjadi karena otak bergerak di dalam tengkorak saat terjadi benturan keras, menghantam dinding tengkorak di sisi berlawanan.'
-            },
-            {
-                id: 30, category: 'p3k',
-                question: 'Apa yang harus dilakukan pada korban yang mengalami "Heat Stroke"?',
-                options: [
-                    'Berikan minuman hangat',
-                    'Pindahkan ke tempat teduh, dinginkan tubuh secara cepat (selimuti es, siram air)',
-                    'Biarkan beristirahat di bawah sinar matahari',
-                    'Berikan alkohol'
-                ],
-                correct: 1,
-                explanation: 'Heat stroke adalah kegawatdaruratan medis akibat overheating tubuh. Suhu tubuh >40°C. Gejala: kulit kering dan panas, kebingungan, kehilangan kesadaran, kejang. Penanganan: segera pindahkan ke tempat teduh, dinginkan tubuh secara cepat dengan selimuti es, siram air dingin, kipas angin. Jangan beri minuman jika tidak sadar. Segera rujuk ke RS.'
-            },
-            // =====================================
-            // Pramuka - Dasar & Sejarah (Soal 31-45)
-            // =====================================
-            {
-                id: 31, category: 'pramuka',
-                question: 'Siapa pendiri gerakan Pramuka sedunia?',
-                options: [
-                    'Lord Robert Baden-Powell',
-                    'Sir Ernest Shackleton',
-                    'Lord Kitchener',
-                    'Sir Winston Churchill'
-                ],
-                correct: 0,
-                explanation: 'Lord Robert Stephenson Smyth Baden-Powell adalah pendiri gerakan Pramuka sedunia. Beliau mendirikan gerakan Pramuka pertama kali di Inggris pada tahun 1907 dengan perkemahan pertama di Pulau Brownsea. Buku "Scouting for Boys" yang ia tulis menjadi dasar metodologi Pramuka.'
-            },
-            {
-                id: 32, category: 'pramuka',
-                question: 'Kapan Gerakan Pramuka Indonesia didirikan?',
-                options: [
-                    '17 Agustus 1945',
-                    '20 Mei 1908',
-                    '14 Agustus 1961',
-                    '28 Oktober 1928'
-                ],
-                correct: 2,
-                explanation: 'Gerakan Pramuka Indonesia didirikan pada tanggal 14 Agustus 1961 berdasarkan Keputusan Presiden RI No. 238 Tahun 1961, yang ditetapkan oleh Presiden Soekarno. Tanggal ini kemudian diperingati sebagai Hari Pramuka. Gerakan ini menyatukan berbagai organisasi kepanduan yang ada sebelumnya.'
-            },
-            {
-                id: 33, category: 'pramuka',
-                question: 'Apa bunyi Dasa Dharma yang pertama?',
-                options: [
-                    'Takwa kepada Tuhan Yang Maha Esa',
-                    'Cinta alam dan kasih sayang sesama manusia',
-                    'Patriot yang sopan dan kesatria',
-                    'Rajin, terampil, dan gembira'
-                ],
-                correct: 0,
-                explanation: 'Dasa Dharma pertama adalah "Takwa kepada Tuhan Yang Maha Esa". Ini merupakan dasar spiritual dan moral yang harus dimiliki setiap Pramuka, mencerminkan kepercayaan dan ketaqwaan kepada Tuhan sesuai agama masing-masing. Ini menjadi fondasi utama dari semua nilai kepramukaan.'
-            },
-            {
-                id: 34, category: 'pramuka',
-                question: 'Lambang Gerakan Pramuka Indonesia berbentuk:',
-                options: [
-                    'Bunga melati',
-                    'Tunas kelapa',
-                    'Garuda',
-                    'Bintang'
-                ],
-                correct: 1,
-                explanation: 'Lambang Gerakan Pramuka Indonesia berbentuk tunas kelapa (cikal) yang menggambarkan bahwa Pramuka adalah tunas bangsa yang akan tumbuh menjadi generasi penerus yang kuat dan berguna bagi nusa dan bangsa. Tunas kelapa juga melambangkan keuletan, ketahanan, dan kemandirian.'
-            },
-            {
-                id: 35, category: 'pramuka',
-                question: 'Tingkatan Pramuka untuk usia 16-20 tahun adalah:',
-                options: [
-                    'Siaga',
-                    'Penggalang',
-                    'Penegak',
-                    'Pandega'
-                ],
-                correct: 2,
-                explanation: 'Pramuka Penegak adalah tingkatan untuk usia 16-20 tahun. Nama "Penegak" diambil dari kata "menegakkan" yang bermakna mampu menegakkan nilai-nilai Pramuka dan menjadi contoh bagi adik-adiknya. Penegak memiliki tanggung jawab lebih besar dalam kepemimpinan dan pengabdian.'
-            },
-            {
-                id: 36, category: 'pramuka',
-                question: 'Apa nama panggilan untuk Pembina Pramuka Siaga?',
-                options: [
-                    'Kakak',
-                    'Bapak/Ibu',
-                    'Kak',
-                    'Abang/Mbak'
-                ],
-                correct: 0,
-                explanation: 'Pembina Pramuka Siaga dipanggil "Kakak" atau disingkat "Kak". Panggilan ini mencerminkan hubungan yang akrab dan bersahabat antara pembina dengan peserta didik yang masih anak-anak, menciptakan suasana yang nyaman dan menyenangkan.'
-            },
-            {
-                id: 37, category: 'pramuka',
-                question: 'Salam Pramuka dilakukan dengan mengangkat tangan:',
-                options: [
-                    'Tangan kiri dengan 3 jari tegak',
-                    'Tangan kanan dengan 3 jari tegak',
-                    'Kedua tangan dengan 5 jari tegak',
-                    'Tangan kanan dengan 5 jari tegak'
-                ],
-                correct: 1,
-                explanation: 'Salam Pramuka dilakukan dengan mengangkat tangan kanan, 3 jari (telunjuk, tengah, manis) tegak rapat, ibu jari di atas kelingking. Tiga jari melambangkan Tri Satya, sedangkan ibu jari melindungi kelingking melambangkan yang kuat melindungi yang lemah. Salam ini diucapkan saat menyapa, menghormati, atau memulai acara.'
-            },
-            {
-                id: 38, category: 'pramuka',
-                question: 'Sistem beregu dalam Pramuka Penggalang disebut:',
-                options: [
-                    'Patrol System',
-                    'Squad System',
-                    'Team System',
-                    'Group System'
-                ],
-                correct: 0,
-                explanation: 'Sistem beregu dalam Pramuka Penggalang disebut Patrol System atau Sistem Beregu. Ini adalah metode pendidikan kepramukaan dimana Penggalang belajar dalam kelompok kecil (regu) dengan pemimpin regu sebagai koordinator. Setiap regu memiliki nama, bendera, dan tanggung jawab bersama.'
-            },
-            {
-                id: 39, category: 'pramuka',
-                question: 'Berapa jumlah anggota ideal dalam satu regu Penggalang?',
-                options: [
-                    '5-7 orang',
-                    '6-8 orang',
-                    '8-10 orang',
-                    '10-12 orang'
-                ],
-                correct: 1,
-                explanation: 'Jumlah anggota ideal dalam satu regu Penggalang adalah 6-8 orang termasuk Pemimpin Regu (Pinru) dan Wakil Pemimpin Regu (Wapinru). Jumlah ini memungkinkan partisipasi aktif semua anggota, manajemen yang efektif, dan memfasilitasi pembelajaran kelompok kecil yang optimal.'
-            },
-            {
-                id: 40, category: 'pramuka',
-                question: 'Apa kepanjangan dari SAKA dalam Pramuka?',
-                options: [
-                    'Satuan Karya',
-                    'Sistem Karya',
-                    'Sumber Karya',
-                    'Sarana Karya'
-                ],
-                correct: 0,
-                explanation: 'SAKA adalah singkatan dari Satuan Karya, yaitu wadah kegiatan untuk mengembangkan pengetahuan, keterampilan, pengalaman dan bakti masyarakat dalam berbagai bidang ilmu pengetahuan, teknologi, dan kejuruan untuk Pramuka Penegak dan Pandega. Contohnya SAKA Bakti Husada (kesehatan), SAKA Taruna Bumi (pertanian).'
-            },
-            {
-                id: 41, category: 'pramuka',
-                question: 'Apa arti dari kata "Pramuka"?',
-                options: [
-                    'Prajurit Muda',
-                    'Praja Muda Karana',
-                    'Pembina Remaja',
-                    'Pendidikan Kepemimpinan'
-                ],
-                correct: 1,
-                explanation: 'Kata "Pramuka" adalah singkatan dari Praja Muda Karana. Kata ini berasal dari bahasa Sanskerta: "Praja" (masyarakat), "Muda" (muda), "Karana" (pelaku, yang melakukan). Secara harfiah berarti "Pelaku muda yang berbuat untuk masyarakat", mencerminkan filosofi kepramukaan sebagai gerakan pendidikan non-formal.'
-            },
-            {
-                id: 42, category: 'pramuka',
-                question: 'Apa fungsi utama "Pataka" dalam kepramukaan?',
-                options: [
-                    'Sebagai bendera negara',
-                    'Sebagai bendera regu',
-                    'Sebagai bendera gugusdepan',
-                    'Sebagai bendera kwartir'
-                ],
-                correct: 2,
-                explanation: 'Pataka adalah bendera resmi Gugusdepan (Gudep) Pramuka. Pataka berfungsi sebagai identitas dan simbol kehormatan Gudep. Biasanya diberikan oleh Kwartir Cabang dan diangkat dalam upacara resmi. Pataka memiliki lambang-lambang khas Gudep, seperti nama, motto, dan logo.'
-            },
-            {
-                id: 43, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Bakti Sosial" dalam kepramukaan?',
-                options: [
-                    'Kegiatan piknik',
-                    'Kegiatan yang bertujuan untuk membantu masyarakat tanpa pamrih',
-                    'Kegiatan bermain di taman',
-                    'Kegiatan latihan militer'
-                ],
-                correct: 1,
-                explanation: 'Bakti Sosial adalah kegiatan yang bertujuan untuk membantu masyarakat tanpa pamrih, sebagai bentuk pengabdian dan tanggung jawab sosial Pramuka. Contoh: membersihkan lingkungan, donor darah, mengajar anak kurang mampu, membantu korban bencana.'
-            },
-            {
-                id: 44, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Krida" dalam SAKA?',
-                options: [
-                    'Kegiatan olahraga',
-                    'Subbidang kegiatan spesifik dalam SAKA',
-                    'Perlombaan antar regu',
-                    'Kegiatan camping'
-                ],
-                correct: 1,
-                explanation: 'Krida adalah subbidang kegiatan spesifik dalam Satuan Karya (SAKA). Misalnya, dalam SAKA Bakti Husada, terdapat Krida: P3K, Pelayanan Kesehatan, Promosi Kesehatan, dan Rehabilitasi. Setiap Krida memiliki tujuan dan kompetensi yang harus dikuasai oleh anggota SAKA.'
-            },
-            {
-                id: 45, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Buku Harian Pramuka"?',
-                options: [
-                    'Buku catatan keuangan',
-                    'Buku catatan harian kegiatan dan refleksi pribadi',
-                    'Buku pedoman organisasi',
-                    'Buku panduan teknik'
-                ],
-                correct: 1,
-                explanation: 'Buku Harian Pramuka adalah buku catatan harian yang digunakan oleh setiap Pramuka untuk mencatat kegiatan, pengalaman, refleksi pribadi, dan pencapaian selama masa kepramukaan. Buku ini merupakan alat evaluasi diri dan dokumentasi perjalanan pribadi dalam pendidikan kepramukaan.'
-            },
-            // =====================================
-            // Pramuka - Lanjutan & Teknik (Soal 46-65)
-            // =====================================
-            {
-                id: 46, category: 'pramuka',
-                question: 'Dalam kegiatan hiking, apa yang dimaksud dengan "Leave No Trace"?',
-                options: [
-                    'Tidak meninggalkan jejak kaki',
-                    'Tidak meninggalkan sampah dan kerusakan alam',
-                    'Tidak membuat peta perjalanan',
-                    'Tidak membawa kompas'
-                ],
-                correct: 1,
-                explanation: '"Leave No Trace" adalah prinsip etika alam yang mengajarkan untuk tidak meninggalkan dampak negatif terhadap lingkungan, termasuk tidak membuang sampah, tidak merusak tumbuhan, tidak mengganggu satwa liar, dan menjaga kelestarian alam untuk generasi mendatang. Ini adalah inti dari kepramukaan berkelanjutan.'
-            },
-            {
-                id: 47, category: 'pramuka',
-                question: 'Simpul yang digunakan untuk memulai semua ikatan adalah:',
-                options: [
-                    'Simpul hidup',
-                    'Simpul mati',
-                    'Simpul jangkar',
-                    'Simpul tiang'
-                ],
-                correct: 1,
-                explanation: 'Simpul mati (clove hitch) adalah simpul dasar yang digunakan untuk memulai hampir semua jenis ikatan dalam pioneering. Simpul ini mudah dibuat, kuat, dan dapat dikencangkan dengan mudah. Simpul ini digunakan untuk mengikatkan tali pada tiang atau pohon sebagai awal dari konstruksi.'
-            },
-            {
-                id: 48, category: 'pramuka',
-                question: 'Apa fungsi utama kompas dalam navigasi?',
-                options: [
-                    'Menentukan ketinggian',
-                    'Mengukur jarak',
-                    'Menentukan arah mata angin',
-                    'Mengukur suhu'
-                ],
-                correct: 2,
-                explanation: 'Fungsi utama kompas adalah menentukan arah mata angin dengan menunjuk arah utara magnetik bumi. Kompas sangat penting dalam navigasi dan orienteering untuk menentukan arah perjalanan dan posisi. Kompas biasanya digunakan bersama peta untuk menentukan jalur perjalanan yang akurat.'
-            },
-            {
-                id: 49, category: 'pramuka',
-                question: 'Dalam sandi morse, huruf "S" dilambangkan dengan:',
-                options: [
-                    'Tiga titik (...)',
-                    'Tiga garis (---)',
-                    'Titik-garis (.-)',
-                    'Garis-titik (-.) '
-                ],
-                correct: 0,
-                explanation: 'Dalam sandi morse, huruf "S" dilambangkan dengan tiga titik (...). Sandi morse adalah sistem komunikasi yang menggunakan kombinasi titik dan garis untuk mewakili huruf dan angka. "SOS" (...---...) adalah kode internasional untuk pertolongan.'
-            },
-            {
-                id: 50, category: 'pramuka',
-                question: 'Apa nama panggilan untuk Pembina Pramuka Penegak?',
-                options: [
-                    'Kakak',
-                    'Bapak/Ibu',
-                    'Kak',
-                    'Mas/Mbak'
-                ],
-                correct: 1,
-                explanation: 'Pembina Pramuka Penegak dipanggil "Bapak" atau "Ibu". Panggilan ini menunjukkan hubungan yang lebih dewasa dan menghormati kedudukan pembina sebagai figur yang dihormati dan diteladani. Ini mencerminkan peran pembina sebagai mentor dan panutan.'
-            },
-            {
-                id: 51, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Patroli" dalam sistem kepramukaan?',
-                options: [
-                    'Kegiatan berjalan-jalan di kota',
-                    'Kelompok kecil yang bekerja mandiri dalam kegiatan',
-                    'Kegiatan militer',
-                    'Kegiatan berburu'
-                ],
-                correct: 1,
-                explanation: 'Patroli adalah kelompok kecil (biasanya 6-8 orang) yang bekerja secara mandiri dalam kegiatan kepramukaan. Setiap patroli memiliki pemimpin (pinru) dan wakil (wapinru). Sistem ini mendorong tanggung jawab, kepemimpinan, dan kerjasama di antara anggota.'
-            },
-            {
-                id: 52, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Orienteering"?',
-                options: [
-                    'Bermain di taman bermain',
-                    'Kegiatan mencari barang tersembunyi',
-                    'Keterampilan navigasi dengan peta dan kompas',
-                    'Kegiatan memancing'
-                ],
-                correct: 2,
-                explanation: 'Orienteering adalah keterampilan navigasi dengan menggunakan peta topografi dan kompas untuk menentukan posisi dan bergerak dari satu titik ke titik lain di alam terbuka. Ini menguji kemampuan membaca peta, mengenali fitur geografis, dan menentukan arah dengan akurat.'
-            },
-            {
-                id: 53, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Pioneering"?',
-                options: [
-                    'Membuat karya seni',
-                    'Membuat struktur dari kayu dan tali',
-                    'Membuat api unggun',
-                    'Membuat makanan'
-                ],
-                correct: 1,
-                explanation: 'Pioneering adalah keterampilan membuat struktur konstruksi dari kayu dan tali. Ini mencakup penggunaan berbagai simpul dan ikatan untuk membuat jembatan, menara, gerbang, atau tempat tinggal darurat. Pioneering mengembangkan kreativitas, kerja tim, dan keterampilan teknis.'
-            },
-            {
-                id: 54, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Tenda" dalam kepramukaan?',
-                options: [
-                    'Tempat tidur',
-                    'Tempat tinggal sementara yang dibuat dari kain dan tiang',
-                    'Tempat menyimpan makanan',
-                    'Tempat memasak'
-                ],
-                correct: 1,
-                explanation: 'Tenda adalah tempat tinggal sementara yang dibuat dari kain (tenda) dan tiang (paku, tongkat). Dalam kepramukaan, membuat dan memasang tenda adalah keterampilan dasar yang harus dikuasai untuk melindungi diri dari cuaca, hewan, dan lingkungan.'
-            },
-            {
-                id: 55, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kemah"?',
-                options: [
-                    'Kegiatan berbelanja',
-                    'Kegiatan berkemah di alam terbuka',
-                    'Kegiatan belajar di kelas',
-                    'Kegiatan bermain video game'
-                ],
-                correct: 1,
-                explanation: 'Kemah adalah kegiatan berkemah di alam terbuka yang merupakan bagian integral dari pendidikan kepramukaan. Kemah mengajarkan kemandirian, kerja sama, tanggung jawab, dan penghargaan terhadap alam.'
-            },
-            {
-                id: 56, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Sumpah Pramuka"?',
-                options: [
-                    'Janji untuk tidak berbohong',
-                    'Janji untuk menjadi pemimpin',
-                    'Janji untuk mengikuti Tri Satya dan Dasa Dharma',
-                    'Janji untuk tidak bermain game'
-                ],
-                correct: 2,
-                explanation: 'Sumpah Pramuka adalah janji resmi yang diucapkan oleh setiap Pramuka saat masuk menjadi anggota Gerakan Pramuka. Janji ini mencakup komitmen untuk mengikuti Tri Satya (Tiga Janji) dan Dasa Dharma (Sepuluh Janji) sebagai pedoman hidup.'
-            },
-            {
-                id: 57, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepemimpinan Demokratis" dalam Pramuka?',
-                options: [
-                    'Pemimpin memerintah tanpa diskusi',
-                    'Pemimpin mengambil keputusan bersama dengan anggota',
-                    'Pemimpin memilih anggota',
-                    'Pemimpin memilih sendiri'
-                ],
-                correct: 1,
-                explanation: 'Kepemimpinan demokratis dalam Pramuka berarti pemimpin mengambil keputusan bersama dengan anggota kelompok melalui musyawarah. Ini mencerminkan nilai kepramukaan yang menghargai partisipasi, keadilan, dan kebersamaan.'
-            },
-            {
-                id: 58, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kerja Sama" dalam Pramuka?',
-                options: [
-                    'Bekerja sendiri-sendiri',
-                    'Bekerja sama untuk mencapai tujuan bersama',
-                    'Bekerja untuk kepentingan pribadi',
-                    'Bekerja tanpa tujuan'
-                ],
-                correct: 1,
-                explanation: 'Kerja sama dalam Pramuka adalah kemampuan untuk bekerja bersama dengan orang lain untuk mencapai tujuan bersama. Ini melibatkan komunikasi, saling percaya, toleransi, dan saling membantu. Kerja sama adalah kunci keberhasilan dalam kegiatan kelompok.'
-            },
-            {
-                id: 59, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kedisiplinan" dalam Pramuka?',
-                options: [
-                    'Melakukan hal yang disukai',
-                    'Melakukan hal yang benar meskipun tidak disukai',
-                    'Melakukan hal yang mudah',
-                    'Melakukan hal yang sulit'
-                ],
-                correct: 1,
-                explanation: 'Kedisiplinan dalam Pramuka adalah kemampuan untuk melakukan hal yang benar meskipun tidak disukai. Ini mencakup kepatuhan terhadap aturan, tanggung jawab, dan komitmen terhadap nilai-nilai yang dijunjung tinggi. Kedisiplinan adalah fondasi dari karakter yang kuat.'
-            },
-            {
-                id: 60, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepedulian Lingkungan" dalam Pramuka?',
-                options: [
-                    'Mengabaikan lingkungan',
-                    'Menjaga dan melestarikan lingkungan',
-                    'Menggunakan sumber daya secara berlebihan',
-                    'Membuang sampah sembarangan'
-                ],
-                correct: 1,
-                explanation: 'Kepedulian lingkungan dalam Pramuka adalah komitmen untuk menjaga dan melestarikan lingkungan hidup. Ini tercermin dalam prinsip Leave No Trace, pengelolaan sampah, dan kegiatan konservasi alam. Pramuka diajarkan untuk menjadi pelindung alam.'
-            },
-            {
-                id: 61, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kemandirian" dalam Pramuka?',
-                options: [
-                    'Tidak bisa berdiri sendiri',
-                    'Bisa berdiri sendiri dan mengambil keputusan',
-                    'Mengandalkan orang lain',
-                    'Tidak bisa melakukan apa-apa'
-                ],
-                correct: 1,
-                explanation: 'Kemandirian dalam Pramuka adalah kemampuan untuk berdiri sendiri dan mengambil keputusan yang bijaksana. Ini mencakup keterampilan hidup, manajemen waktu, dan tanggung jawab pribadi. Pramuka diajarkan untuk menjadi individu yang mandiri dan bertanggung jawab.'
-            },
-            {
-                id: 62, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepemimpinan Pelayan" dalam Pramuka?',
-                options: [
-                    'Pemimpin yang memerintah',
-                    'Pemimpin yang melayani anggota',
-                    'Pemimpin yang memilih sendiri',
-                    'Pemimpin yang tidak peduli'
-                ],
-                correct: 1,
-                explanation: 'Kepemimpinan pelayan dalam Pramuka adalah gaya kepemimpinan di mana pemimpin melayani anggota kelompoknya. Pemimpin tidak menuntut, tetapi mendorong, membantu, dan memfasilitasi pertumbuhan anggota. Ini mencerminkan nilai kepramukaan yang humanis dan egaliter.'
-            },
-            {
-                id: 63, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepemimpinan Transformasional" dalam Pramuka?',
-                options: [
-                    'Pemimpin yang mengubah dirinya sendiri',
-                    'Pemimpin yang mengubah anggota menjadi lebih baik',
-                    'Pemimpin yang mengubah lingkungan',
-                    'Pemimpin yang mengubah aturan'
-                ],
-                correct: 1,
-                explanation: 'Kepemimpinan transformasional dalam Pramuka adalah gaya kepemimpinan di mana pemimpin menginspirasi dan memotivasi anggota untuk menjadi lebih baik, melewati batas-batas mereka, dan mencapai potensi tertinggi. Pemimpin transformasional menjadi panutan dan motivator.'
-            },
-            {
-                id: 64, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepemimpinan Situasional" dalam Pramuka?',
-                options: [
-                    'Pemimpin yang tidak peduli',
-                    'Pemimpin yang menyesuaikan gaya kepemimpinan dengan situasi',
-                    'Pemimpin yang selalu memerintah',
-                    'Pemimpin yang selalu melayani'
-                ],
-                correct: 1,
-                explanation: 'Kepemimpinan situasional dalam Pramuka adalah gaya kepemimpinan di mana pemimpin menyesuaikan gaya kepemimpinannya berdasarkan situasi dan tingkat kematangan anggota. Pemimpin bisa menjadi otoritatif, persuasif, partisipatif, atau delegatif tergantung pada kebutuhan.'
-            },
-            {
-                id: 65, category: 'pramuka',
-                question: 'Apa yang dimaksud dengan "Kepemimpinan Kolaboratif" dalam Pramuka?',
-                options: [
-                    'Pemimpin yang bekerja sendiri',
-                    'Pemimpin yang bekerja sama dengan pihak lain',
-                    'Pemimpin yang memerintah',
-                    'Pemimpin yang tidak peduli'
-                ],
-                correct: 1,
-                explanation: 'Kepemimpinan kolaboratif dalam Pramuka adalah gaya kepemimpinan di mana pemimpin bekerja sama dengan pihak lain, termasuk organisasi, komunitas, dan pemerintah, untuk mencapai tujuan bersama. Ini mencerminkan nilai kepramukaan yang terbuka dan bermitra.'
-            }
-        ];
-
+        // =============================================
+        // DATA STRUCTURE - DIAMBIL DARI data.json
+        // =============================================
+        let questionBank = [];
+        let materials = {};
+        
         // Variabel global untuk quiz
         let currentQuiz = [];
         let currentQuestionIndex = 0;
         let score = 0;
-        let quizTimer = null;
-        let startTime = null;
         let selectedAnswers = [];
+        let currentCategory = 'all';
+        let startTime = 0;
+        let quizTimer = null;
+
+        // Fungsi untuk memuat data JSON
+        async function loadJsonData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                questionBank = data.questions || [];
+                materials = data.materials || {};
+                // Inisialisasi semua tab setelah data dimuat
+                initializeAllTabs();
+                // Muat riwayat saat data selesai dimuat
+                loadHistory();
+            } catch (error) {
+                console.error("Gagal memuat data.json:", error);
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.innerHTML = `<strong style="color: #ff6b6b;">❌ Gagal memuat data. Pastikan file 'data.json' ada di folder yang sama.</strong>`;
+                });
+            }
+        }
+
+        // Inisialisasi semua konten setelah data dimuat
+        function initializeAllTabs() {
+            loadReferenceData();
+            renderP3KMaterials();
+            renderPramukaMaterials();
+            renderBoymanMaterials();
+            // Setelah data selesai dimuat, ganti loading dengan konten asli
+            document.querySelectorAll('.loading').forEach(el => {
+                if (el.parentElement.id === 'quizContainer') {
+                    el.innerHTML = `
+                        <div class="question-card">
+                            <h2 style="text-align: center; color: #667eea;">Selamat Datang di Kuis P3K & Pramuka Berbasis BOYMAN 2016!</h2>
+                            <p style="text-align: center; margin: 20px 0; color: #666;">Pilih kategori kuis yang ingin Anda ikuti untuk memulai pembelajaran interaktif berdasarkan sumber resmi.</p>
+                            <div style="text-align: center;">
+                                <button class="btn btn-primary" onclick="startQuiz('all')" style="margin: 10px;">Mulai Kuis Campur</button>
+                                <button class="btn btn-success" onclick="startQuiz('p3k')" style="margin: 10px;">Mulai Kuis P3K</button>
+                                <button class="btn btn-info" onclick="startQuiz('pramuka')" style="margin: 10px;">Mulai Kuis Pramuka</button>
+                                <button class="btn btn-danger" onclick="startQuiz('boyman-xxiv')" style="margin: 10px;">Mulai BAB XXIV</button>
+                                <button class="btn btn-purple" onclick="startQuiz('boyman-xxix')" style="margin: 10px;">Mulai BAB XXIX</button>
+                                <button class="btn btn-orange" onclick="startQuiz('boyman-iii')" style="margin: 10px;">Mulai BAB III</button>
+                                <button class="btn btn-teal" onclick="startQuiz('boyman-iv')" style="margin: 10px;">Mulai BAB IV</button>
+                                <button class="btn btn-blue" onclick="startQuiz('boyman-vii')" style="margin: 10px;">Mulai BAB VII</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
 
         // Fungsi untuk menampilkan tab
         function showTab(tabName) {
-            // Sembunyikan semua konten tab
-            const allTabs = document.querySelectorAll('.tab-content');
-            allTabs.forEach(tab => tab.classList.remove('active'));
-            // Hapus kelas active dari semua tombol tab
-            const allTabButtons = document.querySelectorAll('.nav-tab');
-            allTabButtons.forEach(btn => btn.classList.remove('active'));
-            // Tampilkan konten tab yang dipilih
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            // Tambahkan kelas active ke tombol tab yang dipilih
             event.target.classList.add('active');
-            // Load konten spesifik tab
-            if (tabName === 'reference') {
-                loadReferenceData();
-            }
+            if (tabName === 'reference') loadReferenceData();
+            else if (tabName === 'p3k') renderP3KMaterials();
+            else if (tabName === 'pramuka') renderPramukaMaterials();
+            else if (tabName === 'boyman') renderBoymanMaterials();
+            else if (tabName === 'history') loadHistory();
         }
 
         // Fungsi untuk memulai quiz
         function startQuiz(category) {
-            // Reset quiz state
             currentQuestionIndex = 0;
             score = 0;
             selectedAnswers = [];
             startTime = Date.now();
-            // Filter soal berdasarkan kategori
+            currentCategory = category;
             if (category === 'all') {
                 currentQuiz = shuffleArray([...questionBank]);
             } else {
                 currentQuiz = shuffleArray(questionBank.filter(q => q.category === category));
             }
-            // Batasi jumlah soal maksimal 20 untuk quiz
-            currentQuiz = currentQuiz.slice(0, Math.min(20, currentQuiz.length));
-            // Mulai timer
+            currentQuiz = currentQuiz.slice(0, Math.min(25, currentQuiz.length));
             startQuizTimer();
-            // Tampilkan soal pertama
             displayQuestion();
-            // Update progress
             updateQuizProgress();
-            // Sembunyikan score display
             document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('quizCategory').textContent = `Kategori: ${getCategoryLabel(category)}`;
         }
 
         // Fungsi untuk mengacak array
@@ -1264,7 +727,7 @@
                     <div class="options">
                         ${question.options.map((option, index) => `
                             <div class="option" onclick="selectAnswer(${index})" data-index="${index}">
-                                ${String.fromCharCode(65 + index)}. ${option}
+                                <span style="font-weight: bold;">${String.fromCharCode(65 + index)}</span>. ${option}
                             </div>
                         `).join('')}
                     </div>
@@ -1285,33 +748,17 @@
         function selectAnswer(index) {
             const question = currentQuiz[currentQuestionIndex];
             const options = document.querySelectorAll('.option');
-            // Hapus seleksi sebelumnya
-            options.forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'incorrect');
-            });
-            // Tandai jawaban yang dipilih
+            options.forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect'));
             options[index].classList.add('selected');
-            // Simpan jawaban
             selectedAnswers[currentQuestionIndex] = index;
-            // Tunggu sebentar lalu tampilkan hasil
             setTimeout(() => {
-                // Tampilkan jawaban benar/salah
                 options.forEach((opt, i) => {
-                    if (i === question.correct) {
-                        opt.classList.add('correct');
-                    } else if (i === index && i !== question.correct) {
-                        opt.classList.add('incorrect');
-                    }
+                    if (i === question.correct) opt.classList.add('correct');
+                    else if (i === index && i !== question.correct) opt.classList.add('incorrect');
                 });
-                // Update score
-                if (index === question.correct) {
-                    score++;
-                }
-                // Tampilkan penjelasan
+                if (index === question.correct) score++;
                 document.getElementById('explanation').classList.add('show');
-                // Tampilkan tombol next
                 document.getElementById('nextBtn').style.display = 'inline-block';
-                // Disable option selection
                 options.forEach(opt => opt.style.pointerEvents = 'none');
             }, 500);
         }
@@ -1329,7 +776,18 @@
             const endTime = Date.now();
             const timeElapsed = Math.floor((endTime - startTime) / 1000);
             const percentage = Math.round((score / currentQuiz.length) * 100);
-            // Tampilkan hasil
+            
+            // Simpan hasil ke localStorage
+            saveQuizResult({
+                category: currentCategory,
+                score: score,
+                total: currentQuiz.length,
+                percentage: percentage,
+                time: timeElapsed,
+                timestamp: new Date().toISOString(),
+                answers: selectedAnswers
+            });
+
             const resultHtml = `
                 <h2 style="color: #667eea; text-align: center;">🎉 Quiz Selesai!</h2>
                 <div style="text-align: center; margin: 20px 0;">
@@ -1339,9 +797,10 @@
                     <p><strong>Skor:</strong> ${score} dari ${currentQuiz.length} soal</p>
                     <p><strong>Waktu:</strong> ${formatTime(timeElapsed)}</p>
                     <p><strong>Status:</strong> ${getGradeText(percentage)}</p>
+                    <p><strong>Kategori:</strong> ${getCategoryLabel(currentCategory)}</p>
                 </div>
                 <div style="text-align: center;">
-                    <button class="btn btn-primary" onclick="startQuiz('all')" style="margin: 5px;">🎲 Quiz Lagi</button>
+                    <button class="btn btn-primary" onclick="startQuiz('${currentCategory}')" style="margin: 5px;">🎲 Uji Lagi</button>
                     <button class="btn btn-success" onclick="showDetailedResults()" style="margin: 5px;">📊 Lihat Detail</button>
                     <button class="btn btn-info" onclick="resetQuiz()" style="margin: 5px;">🏠 Kembali ke Menu</button>
                 </div>
@@ -1353,7 +812,6 @@
             `;
         }
 
-        // Fungsi untuk mendapatkan teks nilai
         function getGradeText(percentage) {
             if (percentage >= 90) return "🏆 Excellent! Sempurna!";
             if (percentage >= 80) return "⭐ Very Good! Sangat Baik!";
@@ -1362,11 +820,11 @@
             return "📚 Need More Study! Perlu Belajar Lagi!";
         }
 
-        // Fungsi untuk menampilkan hasil detail
         function showDetailedResults() {
             let resultDetails = `
                 <h2>📊 Hasil Detail Quiz</h2>
                 <p><strong>Total Skor:</strong> ${score}/${currentQuiz.length} (${Math.round((score/currentQuiz.length)*100)}%)</p>
+                <p><strong>Kategori:</strong> ${getCategoryLabel(currentCategory)}</p>
                 <hr style="margin: 20px 0;">
             `;
             currentQuiz.forEach((question, index) => {
@@ -1380,41 +838,46 @@
                         <p><strong>Jawaban Anda:</strong> ${userAnswerText} ${isCorrect ? '✅' : '❌'}</p>
                         ${!isCorrect ? `<p><strong>Jawaban Benar:</strong> ${correctAnswerText} ✅</p>` : ''}
                         <p><strong>Penjelasan:</strong> ${question.explanation}</p>
+                        <p><small><em>Kategori: ${getCategoryLabel(question.category)}</em></small></p>
                     </div>
                 `;
             });
             document.getElementById('modalContent').innerHTML = resultDetails;
-            document.getElementById('resultModal').style.display = 'block';
+            document.getElementById('resultModal').style.display = 'flex';
         }
 
-        // Fungsi untuk menutup modal
         function closeModal() {
             document.getElementById('resultModal').style.display = 'none';
         }
 
-        // Fungsi untuk reset quiz
         function resetQuiz() {
             stopQuizTimer();
             currentQuiz = [];
             currentQuestionIndex = 0;
             score = 0;
             selectedAnswers = [];
+            currentCategory = 'all';
             document.getElementById('quizContainer').innerHTML = `
                 <div class="question-card">
-                    <h2 style="text-align: center; color: #667eea;">Selamat Datang di Kuis P3K & Pramuka!</h2>
-                    <p style="text-align: center; margin: 20px 0; color: #666;">Pilih kategori kuis yang ingin Anda ikuti untuk memulai pembelajaran interaktif.</p>
+                    <h2 style="text-align: center; color: #667eea;">Selamat Datang di Kuis P3K & Pramuka Berbasis BOYMAN 2016!</h2>
+                    <p style="text-align: center; margin: 20px 0; color: #666;">Pilih kategori kuis yang ingin Anda ikuti untuk memulai pembelajaran interaktif berdasarkan sumber resmi.</p>
                     <div style="text-align: center;">
                         <button class="btn btn-primary" onclick="startQuiz('all')" style="margin: 10px;">Mulai Kuis Campur</button>
                         <button class="btn btn-success" onclick="startQuiz('p3k')" style="margin: 10px;">Mulai Kuis P3K</button>
                         <button class="btn btn-info" onclick="startQuiz('pramuka')" style="margin: 10px;">Mulai Kuis Pramuka</button>
+                        <button class="btn btn-danger" onclick="startQuiz('boyman-xxiv')" style="margin: 10px;">Mulai BAB XXIV</button>
+                        <button class="btn btn-purple" onclick="startQuiz('boyman-xxix')" style="margin: 10px;">Mulai BAB XXIX</button>
+                        <button class="btn btn-orange" onclick="startQuiz('boyman-iii')" style="margin: 10px;">Mulai BAB III</button>
+                        <button class="btn btn-teal" onclick="startQuiz('boyman-iv')" style="margin: 10px;">Mulai BAB IV</button>
+                        <button class="btn btn-blue" onclick="startQuiz('boyman-vii')" style="margin: 10px;">Mulai BAB VII</button>
                     </div>
                 </div>
             `;
             updateQuizProgress();
             document.getElementById('scoreDisplay').style.display = 'none';
+            document.getElementById('quizCategory').textContent = 'Kategori: Semua';
         }
 
-        // Fungsi timer quiz
         function startQuizTimer() {
             const timerElement = document.getElementById('timer');
             quizTimer = setInterval(() => {
@@ -1424,10 +887,8 @@
         }
 
         function stopQuizTimer() {
-            if (quizTimer) {
-                clearInterval(quizTimer);
-                quizTimer = null;
-            }
+            if (quizTimer) clearInterval(quizTimer);
+            quizTimer = null;
         }
 
         function formatTime(seconds) {
@@ -1436,30 +897,32 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Fungsi untuk update progress quiz
         function updateQuizProgress() {
             const progressElement = document.getElementById('quizProgress');
-            if (currentQuiz.length > 0) {
-                progressElement.textContent = `Soal: ${currentQuestionIndex}/${currentQuiz.length}`;
-            } else {
-                progressElement.textContent = 'Soal: 0/0';
-            }
+            progressElement.textContent = `Soal: ${currentQuestionIndex}/${currentQuiz.length || 0}`;
         }
 
-        // Fungsi untuk load data referensi
+        // Load reference data
         function loadReferenceData() {
             const tableBody = document.getElementById('referenceTableBody');
             const statsElement = document.getElementById('refStats');
+            if (!questionBank.length) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="loading">⏳ Data belum dimuat...</td></tr>';
+                return;
+            }
             let html = '';
             questionBank.forEach((question, index) => {
-                const categoryText = question.category === 'p3k' ? '🏥 P3K' : '⚡ Pramuka';
+                const categoryClass = getCategoryClass(question.category);
+                const categoryText = getCategoryLabel(question.category);
+                const chapterText = getChapterLabel(question.category);
                 const correctAnswer = question.options[question.correct];
                 html += `
                     <tr>
-                        <td style="text-align: center; font-weight: bold;">${index + 1}</td>
-                        <td style="text-align: center;">${categoryText}</td>
+                        <td style="text-align: center; font-weight: bold;">${question.id}</td>
+                        <td class="${categoryClass}">${categoryText}</td>
+                        <td style="text-align: center; font-weight: bold;">${chapterText}</td>
                         <td>${question.question}</td>
-                        <td style="color: #2ed573; font-weight: bold;">${correctAnswer}</td>
+                        <td style="color: var(--success); font-weight: bold;">${correctAnswer}</td>
                         <td style="font-size: 14px; line-height: 1.4;">${question.explanation}</td>
                     </tr>
                 `;
@@ -1468,176 +931,412 @@
             statsElement.textContent = `Total: ${questionBank.length} soal`;
         }
 
-        // Fungsi untuk pencarian referensi
         function setupReferenceSearch() {
             const searchInput = document.getElementById('refSearch');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const filteredQuestions = questionBank.filter(question => 
-                    question.question.toLowerCase().includes(searchTerm) ||
-                    question.options.some(option => option.toLowerCase().includes(searchTerm)) ||
-                    question.explanation.toLowerCase().includes(searchTerm)
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filtered = questionBank.filter(q =>
+                    q.question.toLowerCase().includes(searchTerm) ||
+                    q.explanation.toLowerCase().includes(searchTerm) ||
+                    q.options.some(opt => opt.toLowerCase().includes(searchTerm)) ||
+                    getChapterLabel(q.category).toLowerCase().includes(searchTerm) ||
+                    getCategoryLabel(q.category).toLowerCase().includes(searchTerm)
                 );
-                displayFilteredReference(filteredQuestions);
+                displayFilteredReference(filtered);
             });
         }
 
-        // Fungsi untuk menampilkan referensi yang difilter
         function displayFilteredReference(questions) {
             const tableBody = document.getElementById('referenceTableBody');
             const statsElement = document.getElementById('refStats');
             let html = '';
             questions.forEach((question, index) => {
-                const categoryText = question.category === 'p3k' ? '🏥 P3K' : '⚡ Pramuka';
+                const categoryClass = getCategoryClass(question.category);
+                const categoryText = getCategoryLabel(question.category);
+                const chapterText = getChapterLabel(question.category);
                 const correctAnswer = question.options[question.correct];
                 html += `
                     <tr>
                         <td style="text-align: center; font-weight: bold;">${question.id}</td>
-                        <td style="text-align: center;">${categoryText}</td>
+                        <td class="${categoryClass}">${categoryText}</td>
+                        <td style="text-align: center; font-weight: bold;">${chapterText}</td>
                         <td>${question.question}</td>
-                        <td style="color: #2ed573; font-weight: bold;">${correctAnswer}</td>
+                        <td style="color: var(--success); font-weight: bold;">${correctAnswer}</td>
                         <td style="font-size: 14px; line-height: 1.4;">${question.explanation}</td>
                     </tr>
                 `;
             });
-            tableBody.innerHTML = html;
+            tableBody.innerHTML = html || '<tr><td colspan="6" style="text-align:center; padding: 20px;">🔍 Tidak ditemukan hasil.</td></tr>';
             statsElement.textContent = `Tampil: ${questions.length} dari ${questionBank.length} soal`;
         }
 
-        // Fungsi untuk menampilkan semua referensi
         function showAllReference() {
             document.getElementById('refSearch').value = '';
             loadReferenceData();
         }
 
-        // Fungsi untuk filter referensi berdasarkan kategori
-        function filterReference(category) {
-            const filteredQuestions = questionBank.filter(q => q.category === category);
-            displayFilteredReference(filteredQuestions);
+        function filterByCategory(category) {
             document.getElementById('refSearch').value = '';
+            const filtered = questionBank.filter(q => q.category === category);
+            displayFilteredReference(filtered);
         }
 
-        // Fungsi untuk export referensi
         function exportReference() {
-            let textContent = "BANK SOAL P3K & PRAMUKA\n";
-            textContent += "========================================\n";
-            const p3kQuestions = questionBank.filter(q => q.category === 'p3k');
-            const pramukaQuestions = questionBank.filter(q => q.category === 'pramuka');
-            // Export soal P3K
-            textContent += "SOAL P3K (PERTOLONGAN PERTAMA PADA KECELAKAAN)\n";
-            textContent += "=" + "=".repeat(50) + "\n";
-            p3kQuestions.forEach(question => {
-                textContent += `${question.id}. ${question.question}\n`;
-                question.options.forEach((option, index) => {
-                    const marker = index === question.correct ? " ✓" : "";
-                    textContent += `   ${String.fromCharCode(65 + index)}. ${option}${marker}\n`;
-                });
-                textContent += `   Penjelasan: ${question.explanation}\n`;
-            });
-            // Export soal Pramuka
-            textContent += "\nSOAL PRAMUKA (KEPRAMUKAAN)\n";
-            textContent += "=" + "=".repeat(50) + "\n";
-            pramukaQuestions.forEach(question => {
-                textContent += `${question.id}. ${question.question}\n`;
-                question.options.forEach((option, index) => {
-                    const marker = index === question.correct ? " ✓" : "";
-                    textContent += `   ${String.fromCharCode(65 + index)}. ${option}${marker}\n`;
-                });
-                textContent += `   Penjelasan: ${question.explanation}\n`;
-            });
-            // Download file
-            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+            const blob = new Blob([JSON.stringify({ questions: questionBank, materials: materials }, null, 2)], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'bank_soal_p3k_pramuka.txt';
+            a.download = 'bank_soal_p3k_pramuka_boyman2016.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
+            alert('✅ Data berhasil diekspor sebagai JSON!');
         }
 
-        // Event listeners dan inisialisasi
-        document.addEventListener('DOMContentLoaded', function() {
-            // Setup search functionality
-            setupReferenceSearch();
-            // Load initial reference data
-            loadReferenceData();
-            // Setup quiz search
-            const quizSearch = document.getElementById('quizSearch');
-            quizSearch.addEventListener('input', function() {
-                // Implementasi pencarian quiz jika diperlukan
-                console.log('Quiz search:', this.value);
-            });
-            // Close modal when clicking outside
-            window.addEventListener('click', function(event) {
-                const modal = document.getElementById('resultModal');
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    closeModal();
-                }
-            });
-        });
-
-        // Tambahan fungsi utilitas
-        function printResults() {
-            window.print();
+                function exportToPDF() {
+            alert('⚠️ Fitur Export PDF memerlukan library seperti jsPDF.\nDi produksi, gunakan:\n1. jsPDF + html2pdf.js\n2. Atau server-side PDF generator.');
         }
 
-        function shareResults() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Hasil Kuis P3K & Pramuka',
-                    text: `Saya mendapat skor ${score}/${currentQuiz.length} dalam kuis P3K & Pramuka!`,
-                    url: window.location.href
+        // Render P3K Materials
+        function renderP3KMaterials() {
+            const container = document.getElementById('p3kMaterials');
+            if (!materials.p3k) {
+                container.innerHTML = '<p style="color:#ff6b6b;">❌ Data materi P3K tidak ditemukan di data.json</p>';
+                return;
+            }
+            let html = '';
+            materials.p3k.sections.forEach(section => {
+                html += `
+                    <div class="material-section">
+                        <h3>${section.title}</h3>
+                        ${section.type === 'list' ? `
+                            <ul>
+                                ${section.items.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        ` : section.type === 'ordered' ? `
+                            <ol>
+                                ${section.items.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
+                        ` : `
+                            <p>${section.items.join('<br><br>')}</p>
+                        `}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render Pramuka Materials
+        function renderPramukaMaterials() {
+            const container = document.getElementById('pramukaMaterials');
+            if (!materials.pramuka) {
+                container.innerHTML = '<p style="color:#ff6b6b;">❌ Data materi Pramuka tidak ditemukan di data.json</p>';
+                return;
+            }
+            let html = '';
+            materials.pramuka.sections.forEach(section => {
+                html += `
+                    <div class="material-section">
+                        <h3>${section.title}</h3>
+                        ${section.type === 'list' ? `
+                            <ul>
+                                ${section.items.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        ` : section.type === 'ordered' ? `
+                            <ol>
+                                ${section.items.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
+                        ` : `
+                            <p>${section.items.join('<br><br>')}</p>
+                        `}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render Boyman Materials
+        function renderBoymanMaterials() {
+            const sections = [
+                { id: 'boyman-iii', title: 'BAB III: Biografi Baden-Powell', material: materials.boymanIII },
+                { id: 'boyman-iv', title: 'BAB IV: Sejarah Kepanduan & Kepramukaan', material: materials.boymanIV },
+                { id: 'boyman-vii', title: 'BAB VII: Pengetahuan Kepramukaan', material: materials.boymanVII },
+                { id: 'boyman-xxiv', title: 'BAB XXIV: PPPK & Kesehatan', material: materials.boymanXXIV },
+                { id: 'boyman-xxix', title: 'BAB XXIX: Pengetahuan Umum & Wawasan', material: materials.boymanXXIX }
+            ];
+            sections.forEach(sec => {
+                const container = document.getElementById(`${sec.id}-materials`);
+                if (!sec.material) {
+                    container.innerHTML = '<p style="color:#ff6b6b;">❌ Data materi tidak ditemukan di data.json</p>';
+                    return;
+                }
+                let html = '';
+                sec.material.sections.forEach(section => {
+                    html += `
+                        <div class="material-section">
+                            <h3>${section.title}</h3>
+                            ${section.type === 'list' ? `
+                                <ul>
+                                    ${section.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            ` : section.type === 'ordered' ? `
+                                <ol>
+                                    ${section.items.map(item => `<li>${item}</li>`).join('')}
+                                </ol>
+                            ` : `
+                                <p>${section.items.join('<br><br>')}</p>
+                            `}
+                        </div>
+                    `;
                 });
-            } else {
-                // Fallback untuk browser yang tidak mendukung Web Share API
-                const resultsText = `Saya mendapat skor ${score}/${currentQuiz.length} dalam kuis P3K & Pramuka!`;
-                navigator.clipboard.writeText(resultsText).then(() => {
-                    alert('Hasil berhasil disalin ke clipboard!');
-                });
+                container.innerHTML = html;
+            });
+        }
+
+        // Utility functions
+        function getCategoryLabel(category) {
+            const labels = {
+                'p3k': 'P3K',
+                'pramuka': 'Pramuka',
+                'boyman-iii': 'BAB III: Biografi BP',
+                'boyman-iv': 'BAB IV: Sejarah Kepanduan',
+                'boyman-vii': 'BAB VII: Pengetahuan Kepramukaan',
+                'boyman-xxiv': 'BAB XXIV: PPPK & Kesehatan',
+                'boyman-xxix': 'BAB XXIX: Pengetahuan Umum'
+            };
+            return labels[category] || 'Tidak Diketahui';
+        }
+
+        function getChapterLabel(category) {
+            const chapters = {
+                'p3k': 'BAB XXIV',
+                'pramuka': 'BAB VII',
+                'boyman-iii': 'BAB III',
+                'boyman-iv': 'BAB IV',
+                'boyman-vii': 'BAB VII',
+                'boyman-xxiv': 'BAB XXIV',
+                'boyman-xxix': 'BAB XXIX'
+            };
+            return chapters[category] || '-';
+        }
+
+        function getCategoryClass(category) {
+            const classes = {
+                'p3k': 'category-p3k',
+                'pramuka': 'category-pramuka',
+                'boyman-iii': 'category-boyman-iii',
+                'boyman-iv': 'category-boyman-iv',
+                'boyman-vii': 'category-boyman-vii',
+                'boyman-xxiv': 'category-boyman-xxiv',
+                'boyman-xxix': 'category-boyman-xxix'
+            };
+            return classes[category] || '';
+        }
+
+        // =============================================
+        // FITUR RIWAYAT & PENYIMPANAN LOKAL
+        // =============================================
+
+        // Simpan hasil kuis ke localStorage
+        function saveQuizResult(result) {
+            // Ambil riwayat yang sudah ada
+            let history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+            
+            // Tambahkan hasil baru ke awal array (yang terbaru muncul pertama)
+            history.unshift(result);
+            
+            // Batasi hanya 50 riwayat terakhir
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+            
+            // Simpan kembali ke localStorage
+            localStorage.setItem('quizHistory', JSON.stringify(history));
+            
+            // Update tampilan riwayat jika sedang di tab history
+            if (document.getElementById('history').classList.contains('active')) {
+                loadHistory();
             }
         }
 
-        // Fungsi untuk tips belajar
+        // Muat dan tampilkan riwayat dari localStorage
+        function loadHistory() {
+            const historyContainer = document.getElementById('historyContainer');
+            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="empty-history">
+                        📝 Belum ada riwayat kuis.<br>
+                        Silakan ikuti kuis terlebih dahulu untuk melihat hasil Anda di sini.
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            history.forEach(item => {
+                const date = new Date(item.timestamp);
+                const formattedDate = date.toLocaleDateString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const categoryLabel = getCategoryLabel(item.category);
+                const categoryColor = item.category === 'p3k' ? '#2ed573' : 
+                                    item.category === 'pramuka' ? '#577bfa' :
+                                    '#667eea';
+                
+                html += `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-title">${categoryLabel}</div>
+                            <div class="history-date">${formattedDate}</div>
+                        </div>
+                        <div class="history-category">Kategori: ${categoryLabel}</div>
+                        <div class="history-score">${item.score}/${item.total} (${item.percentage}%)</div>
+                        <div>⏰ Waktu: ${formatTime(item.time)}</div>
+                        <div class="history-actions">
+                            <button class="btn btn-small btn-info" onclick="viewQuizResult(${JSON.stringify(item)})">Lihat Detail</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteHistoryItem('${item.timestamp}')">Hapus</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyContainer.innerHTML = html;
+        }
+
+        // Tampilkan detail riwayat dalam modal
+        function viewQuizResult(result) {
+            let resultDetails = `
+                <h2>📊 Detail Hasil Kuis</h2>
+                <p><strong>Tanggal:</strong> ${new Date(result.timestamp).toLocaleDateString('id-ID', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })}</p>
+                <p><strong>Kategori:</strong> ${getCategoryLabel(result.category)}</p>
+                <p><strong>Skor:</strong> ${result.score}/${result.total} (${result.percentage}%)</p>
+                <p><strong>Waktu:</strong> ${formatTime(result.time)}</p>
+                <hr style="margin: 20px 0;">
+            `;
+            
+            // Rekonstruksi soal berdasarkan riwayat
+            const categoryQuestions = questionBank.filter(q => q.category === result.category);
+            const selectedQuestions = shuffleArray(categoryQuestions).slice(0, Math.min(25, categoryQuestions.length));
+            
+            selectedQuestions.forEach((question, index) => {
+                const userAnswer = result.answers[index];
+                const isCorrect = userAnswer === question.correct;
+                const userAnswerText = userAnswer !== undefined ? question.options[userAnswer] : 'Tidak dijawab';
+                const correctAnswerText = question.options[question.correct];
+                resultDetails += `
+                    <div style="margin-bottom: 25px; padding: 15px; border-radius: 10px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                        <p><strong>Soal ${index + 1}:</strong> ${question.question}</p>
+                        <p><strong>Jawaban Anda:</strong> ${userAnswerText} ${isCorrect ? '✅' : '❌'}</p>
+                        ${!isCorrect ? `<p><strong>Jawaban Benar:</strong> ${correctAnswerText} ✅</p>` : ''}
+                        <p><strong>Penjelasan:</strong> ${question.explanation}</p>
+                        <p><small><em>Kategori: ${getCategoryLabel(question.category)}</em></small></p>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('modalContent').innerHTML = resultDetails;
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        // Hapus satu item riwayat
+        function deleteHistoryItem(timestamp) {
+            if (!confirm('Apakah Anda yakin ingin menghapus riwayat ini?')) return;
+            
+            let history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+            history = history.filter(item => item.timestamp !== timestamp);
+            localStorage.setItem('quizHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        // Hapus semua riwayat
+        function clearHistory() {
+            if (!confirm('Apakah Anda yakin ingin menghapus SEMUA riwayat kuis? Tindakan ini tidak bisa dibatalkan.')) return;
+            localStorage.removeItem('quizHistory');
+            loadHistory();
+        }
+
+        // Event listeners dan inisialisasi
+        document.addEventListener('DOMContentLoaded', () => {
+            loadJsonData();
+            setupReferenceSearch();
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('resultModal');
+                if (event.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+            
+            // Tambahkan tombol tips belajar
+            const addTipsButton = () => {
+                const tabs = ['quiz', 'reference', 'p3k', 'pramuka', 'boyman'];
+                tabs.forEach(tab => {
+                    const btn = document.querySelector(`.nav-tab[onclick="showTab('${tab}')"]`);
+                    if (btn) {
+                        const tipBtn = document.createElement('button');
+                        tipBtn.className = 'btn btn-warning';
+                        tipBtn.style.marginLeft = '10px';
+                        tipBtn.style.padding = '8px 12px';
+                        tipBtn.innerHTML = '💡 Tips';
+                        tipBtn.onclick = () => showStudyTips(tab === 'p3k' ? 'p3k' : tab === 'pramuka' ? 'pramuka' : 'boyman');
+                        btn.parentNode.appendChild(tipBtn);
+                    }
+                });
+            };
+            setTimeout(addTipsButton, 1000);
+        });
+
         function showStudyTips(category) {
             let tips = '';
             if (category === 'p3k') {
                 tips = `
-                📚 TIPS BELAJAR P3K:
-                1. 🎯 Hafalkan DRABC Protocol dengan baik
-                2. 💪 Praktikkan teknik CPR secara berkala
-                3. 🏥 Pahami tanda-tanda kondisi darurat
-                4. 🩹 Pelajari penanganan berbagai jenis luka
-                5. ⚡ Latihan simulasi kedaruratan
-                6. 📖 Baca guidebook P3K terbaru
-                7. 👥 Ikut pelatihan P3K bersertifikat
+                📚 TIPS BELAJAR P3K (BOYMAN 2016):
+                1. 🎯 Hafalkan DRABC Protocol dan RICE secara otomatis
+                2. 💪 Kuasai CPR dewasa/anak/bayi dengan rasio dan kedalaman tepat
+                3. 🏥 Pahami tanda-tanda syok, stroke, serangan jantung (FAST)
+                4. 🩹 Kenali kontra indikasi: jangan cabut benda, jangan beri makan tak sadar
+                5. ⚡ Pelajari penanganan luka bakar derajat 1-3 sesuai protokol internasional
+                6. 📖 Gunakan buku Boyman 2016 BAB XXIV sebagai panduan utama
+                7. 👥 Ikuti pelatihan bersertifikat P3K resmi
                 `;
             } else if (category === 'pramuka') {
                 tips = `
-                📚 TIPS BELAJAR PRAMUKA:
-                1. ⚡ Hafalkan Dasa Dharma dan Tri Satya
-                2. 🏕️ Praktikkan skill outdoor secara rutin
-                3. 🧭 Latihan navigasi dan orienteering
-                4. 🪢 Kuasai berbagai jenis simpul
-                5. 📡 Pelajari sandi dan komunikasi
-                6. 🌲 Pahami etika Leave No Trace
-                7. 📖 Baca sejarah dan filosofi kepramukaan
+                📚 TIPS BELAJAR PRAMUKA (BOYMAN 2016):
+                1. ⚡ Hafalkan Tri Satya dan Dasa Dharma tanpa melihat
+                2. 🏕️ Kuasai teknik pioneering: simpul mati, square lashing, diagonal lashing
+                3. 🧭 Latihan orienteering: baca peta, gunakan kompas, tentukan azimuth
+                4. 🪢 Kuasai 10 simpul dasar dan 5 ikatan struktural
+                5. 🌲 Terapkan Leave No Trace dalam setiap kegiatan luar ruang
+                6. 📖 Baca Bab VII Boyman 2016 untuk pemahaman filosofi sistem beregu
+                7. 👥 Ikuti latihan regu (patroli) minimal seminggu sekali
+                `;
+            } else if (category === 'boyman') {
+                tips = `
+                📚 TIPS BELAJAR BOYMAN 2016:
+                1. 📘 Baca setiap bab secara berurutan: III → IV → VII → XXIV → XXIX
+                2. 🔍 Buat flashcard untuk tokoh, tanggal penting, definisi kunci
+                3. 🗂️ Kelompokkan soal berdasarkan bab: 5 soal/hari per bab
+                4. 🤔 Jangan hanya menghafal, pahami konteks historis dan filosofis
+                5. 📅 Uji diri sendiri tiap malam sebelum tidur (repetisi spasi)
+                6. 📚 Gunakan Boyman 2016 sebagai sumber utama, bukan hanya soal
+                7. 🧑‍🏫 Ajarkan ke teman — itu cara tercepat menguasai materi
                 `;
             }
-            alert(tips);
-        }
-
-        // Analytics sederhana
-        function trackQuizCompletion(category, score, total) {
-            // Implementasi tracking analytics jika diperlukan
-            console.log(`Quiz completed: ${category}, Score: ${score}/${total}`);
+            alert(tips.trim());
         }
     </script>
 </body>
